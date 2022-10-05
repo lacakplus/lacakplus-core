@@ -14,19 +14,6 @@ router.post('/api/login', user.login);
 router.post('/api/register', user.register);
 
 
-const item = require('../controllers/itemController.js');
-router.get('/api/item', auth.verifyToken, item.getItems);
-router.post('/api/item/add', item.addItem);
-router.post('/api/item/delete', item.deleteItem);
-
-
-const ngamplop = require('../controllers/ngamplopController.js');
-router.post('/api/ngamplop', auth.verifyToken, ngamplop.getDataNgamplop);
-router.post('/api/ngamplop/detail', auth.verifyToken, ngamplop.getDetailNgamplop);
-router.post('/api/ngamplop/create', auth.verifyToken, ngamplop.createNgamplop);
-router.post('/api/ngamplop/delete', auth.verifyToken, ngamplop.deleteNgamplop);
-router.post('/api/ngamplop/update', auth.verifyToken, ngamplop.updateNgamplop);
-
 // const uploadController = require("../controllers/uploadController.js");
 // router.post("/api/upload", auth.verifyToken, upload.single("file"), uploadController.upload);
 

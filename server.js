@@ -9,7 +9,7 @@ let router = require('./app/routers/router.js');
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
 	res.send({
-    message: "Welcome to Ngamplop"
+    message: "Welcome to Look Track"
   });
 });
 app.use('/', router);
