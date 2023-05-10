@@ -1,9 +1,9 @@
 
 const env = {
-  database: 'dupayid_trackpath',
-  username: 'dupayid_trackpath',
-  password: 'tr4ckp4th',
-  host: 'localhost',
+  database: 'sql12617329',
+  username: 'sql12617329',
+  password: 's6YbqfP9lV',
+  host: 'sql12.freesqldatabase.com',
 };
 
 module.exports = env;

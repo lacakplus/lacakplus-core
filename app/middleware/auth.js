@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const authConfig = require("../config/authConfig.js");
 
 exports.verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
+    let token = req.headers["X-ACCESS-TOKEN"];
 
     if (!token) {
         return res.status(402).send({
