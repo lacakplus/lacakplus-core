@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const authConfig = require("../config/authConfig.js");
 
-exports.verifyToken = (req, res, next) => {
-    let token = req.headers["X-ACCESS-TOKEN"];
+exports.verifyToken = (request, res, next) => {
+    let token = request.headers["x-access-token"];
 
     if (!token) {
         return res.status(402).send({
@@ -19,7 +19,7 @@ exports.verifyToken = (req, res, next) => {
             error: err
         });
       }
-      req.userId = decoded.id;
+      request.userId = decoded.id;
       next();
     });
 };
