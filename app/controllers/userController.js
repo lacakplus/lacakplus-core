@@ -6,6 +6,9 @@ const authConfig = require("../config/authConfig.js");
 exports.login = (request, response) => {
     const username = request.body.username
     const password = request.body.password
+    const platform = request.body.platform
+    const version = request.body.version
+    const fcm = request.body.fcm
     db.pool.query('SELECT * FROM m_user WHERE username = ?', [username], (error, results) => {
         if (error) {
             response.json({
@@ -30,7 +33,12 @@ exports.login = (request, response) => {
             var token = jwt.sign({ id: results[0].id }, authConfig.secret, {
                 expiresIn: 31536000 // 1 year
             });
-            db.pool.query('UPDATE m_user SET token = ? WHERE id = ?', [token, results[0].id], (error, results) => {
+            var dataUser = results[0]
+            dataUser.token = token
+            dataUser.platform = platform
+            dataUser.version = version
+            dataUser.fcm = fcm
+            db.pool.query('UPDATE m_user SET token = ?, platform = ?, version = ?, fcm = ? WHERE id = ?', [token, platform, version, fcm, results[0].id], (error, results) => {
                 if (error) {
                     response.json({
                         code: 400,
@@ -42,8 +50,7 @@ exports.login = (request, response) => {
                 response.json({
                     code: 200,
                     message: "Login Berhasil",
-                    data: results[0],
-                    session: token
+                    data: dataUser
                 });
             })
         } else {
