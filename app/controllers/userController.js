@@ -56,7 +56,16 @@ exports.login = (request, response) => {
 }
 
 exports.register = (request, response) => {
-    const id_company = request.body.id_company
+    //Data Company
+    const company_name = request.body.company_name
+    const company_phone = request.body.company_phone
+    const company_email = request.body.company_email
+    const company_no_id = request.body.company_no_id
+    const lat = request.body.lat
+    const lng = request.body.lng
+    const address = request.body.address
+
+    //Data User
     const id_role = request.body.id_role
     const name = request.body.name
     const no_id = request.body.no_id
@@ -80,7 +89,7 @@ exports.register = (request, response) => {
             });
             return
         }
-        db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone], (error, results) => {
+        db.pool.query('INSERT INTO m_company (name, phone, email, no_id, lat, lng, address) VALUES (?, ?, ?, ?, ?, ?, ?)', [company_name, company_phone, company_email, company_no_id, lat, lng, address], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -89,12 +98,27 @@ exports.register = (request, response) => {
                 });
                 return
             }
-            response.json({
-                code: 200,
-                message: "Pendaftaran Berhasil",
-                data: results[0]
-            });
-        })
+            const id_company = results.insertId
+            db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone], (error, results) => {
+                if (error) {
+                    response.json({
+                        code: 400,
+                        message: error.message,
+                        error: error
+                    });
+                    return
+                }
+                let data = {
+                    id_company: id_company,
+                    id_user: results.insertId
+                }
+                response.json({
+                    code: 200,
+                    message: "Pendaftaran Berhasil",
+                    data: data
+                });
+            })
+        })        
     })
 }
 
