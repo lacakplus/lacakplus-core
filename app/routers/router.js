@@ -18,7 +18,7 @@ router.post('/api/register', user.register);
 
 //  roleController
 const role = require("../controllers/roleController.js");
-router.post('/api/role', auth.verifyToken, role.getRoles);
+router.get('/api/role', auth.verifyToken, role.getRoles);
 
 //  vehicleController
 const vehicle = require("../controllers/vehicleController.js");

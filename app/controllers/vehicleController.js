@@ -37,7 +37,7 @@ exports.addVehicle = (request, response) => {
     const creator_id = request.userId
     const updater_id = request.userId
 
-    db.pool.query('INSERT INTO m_user (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id], (error, results) => {
+    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ?', [no_plate], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -46,9 +46,26 @@ exports.addVehicle = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Penambahan Kendaraan Berhasil"
-        });
+        if (results.length != 0) {
+            response.json({
+                code: 401,
+                message: "Plat nomor sudah pernah digunakan"
+            });
+            return
+        }
+        db.pool.query('INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Penambahan Kendaraan Berhasil"
+            });
+        })
     })
 }
