@@ -9,6 +9,7 @@ exports.login = (request, response) => {
     const platform = request.body.platform
     const version = request.body.version
     const fcm = request.body.fcm
+
     db.pool.query('SELECT * FROM m_user WHERE username = ?', [username], (error, results) => {
         if (error) {
             response.json({
@@ -18,7 +19,7 @@ exports.login = (request, response) => {
             });
             return
         }
-        if (results.length == 0) {
+        if (results.length == 0 || results[0].flag == 0) {
             response.json({
                 code: 401,
                 message: "Akun tidak ditemukan"
@@ -80,7 +81,8 @@ exports.register = (request, response) => {
     const username = request.body.username
     const password = bcrypt.hashSync(request.body.password, 8)
     const phone = request.body.phone
-    db.pool.query('SELECT * FROM m_user WHERE email = ?', [email], (error, results) => {
+
+    db.pool.query('SELECT * FROM m_user WHERE email = ? OR username = ?', [email, username], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -92,7 +94,7 @@ exports.register = (request, response) => {
         if (results.length != 0) {
             response.json({
                 code: 401,
-                message: "Email sudah pernah digunakan"
+                message: "Email atau username sudah pernah digunakan"
             });
             return
         }
@@ -131,6 +133,7 @@ exports.register = (request, response) => {
 
 exports.getUserById = (request, response) => {
     const loginId = request.userId
+    
     db.pool.query('SELECT * FROM m_user WHERE id = ?', [loginId], (error, results) => {
         if (error) {
             response.json({
@@ -155,80 +158,103 @@ exports.getUserById = (request, response) => {
     })
 }
 
-// exports.getUsers = (request, response) => {
-//     db.pool.query('SELECT * FROM user_apps', (error, results) => {
-//         if (error) {
-//             response.json({
-//                 code: 400,
-//                 message: error.message,
-//                 error: error
-//             });
-//             return
-//         }
-//         response.json({
-//             code: 200,
-//             message: "Berhasil mengambil data semua user",
-//             data: results
-//         });
-//     })
-// }
+exports.getUsers = (request, response) => {
+    const id_company = request.body.id_company
 
-// exports.updateProfile = (request, response) => {
-//     const id = parseInt(request.body.id)
-//     const name = request.body.name
-//     const email = request.body.email
-//     const password = request.body.password
-//     db.pool.query('UPDATE user_apps SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, password, id], (error, results) => {
-//         if (error) {
-//             response.json({
-//                 code: 400,
-//                 message: error.message,
-//                 error: error
-//             });
-//             return
-//         }
-//         response.json({
-//             code: 200,
-//             message: "Update profile Berhasil",
-//             data: results
-//         });
-//     })
-// }
+    db.pool.query('SELECT * FROM m_user WHERE id_company = ? AND flag = 1', [id_company], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Berhasil mengambil data semua user",
+            data: results
+        });
+    })
+}
 
-// exports.deleteUser = (request, response) => {
-//     const id = parseInt(request.body.id)
-//     db.pool.query('SELECT * FROM user_apps WHERE id = ?', [id], (error, results) => {
-//         if (error) {
-//             response.json({
-//                 code: 400,
-//                 message: error.message,
-//                 error: error
-//             });
-//             return
-//         }
-//         if (results.length == 0) {
-//             response.json({
-//                 code: 401,
-//                 message: "User tidak ditemukan"
-//             });
-//             return
-//         }
-//         db.pool.query('DELETE FROM user_apps WHERE id = ?', [id], (error, results) => {
-//             if (error) {
-//                 response.json({
-//                     code: 400,
-//                     message: error.message,
-//                     error: error
-//                 });
-//                 return
-//             }
-//             response.json({
-//                 code: 200,
-//                 message: "Berhasil menghapus data user dengan id : "+ id
-//             });
-//         })
-//     })
-// }
+exports.addUser = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const id_role = request.body.id_role
+    const id_company = request.body.id_company
+    const name = request.body.name
+    const no_id = request.body.no_id
+    const email = request.body.email
+    const username = request.body.username
+    const password = bcrypt.hashSync(request.body.password, 8)
+    const phone = request.body.phone
+
+    db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone, userId], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Pendaftaran data pengguna Berhasil"
+        });
+    })
+}
+
+exports.editUser = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const id_user = request.body.id_user
+    const id_role = request.body.id_role
+    const name = request.body.name
+    const no_id = request.body.no_id
+    const email = request.body.email
+    const password = bcrypt.hashSync(request.body.password, 8)
+    const phone = request.body.phone
+    let date = new Date();
+
+    db.pool.query('UPDATE m_user SET id_role = ?, name = ?, no_id = ?, email = ?, password = ?, phone = ?, updater_id = ?, updated_at = ? WHERE id = ?', [id_role, name, no_id, email, password, phone, userId, date, id_user], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Update data pengguna Berhasil"
+        });
+    })
+}
+
+exports.deleteUser = (request, response) => {
+    //Data User
+    const id_user = request.body.id_user
+    const userId = request.userId
+    let date = new Date();
+
+    db.pool.query('UPDATE m_user SET flag = 0, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_user], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Delete data pengguna Berhasil"
+        });
+    })
+}
 
 
 
