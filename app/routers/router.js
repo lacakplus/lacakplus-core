@@ -22,7 +22,10 @@ router.get('/api/role', auth.verifyToken, role.getRoles);
 
 //  vehicleController
 const vehicle = require("../controllers/vehicleController.js");
-router.post('/api/vehicle', auth.verifyToken, vehicle.getVehicles);
+router.post('/api/vehicle', auth.verifyToken, vehicle.getVehicle);
+router.post('/api/vehicles', auth.verifyToken, vehicle.getVehicles);
 router.post('/api/vehicle/add', auth.verifyToken, vehicle.addVehicle);
+router.post('/api/vehicle/edit', auth.verifyToken, vehicle.editVehicle);
+router.post('/api/vehicle/delete', auth.verifyToken, vehicle.deleteVehicle);
 
 module.exports = router;
