@@ -31,9 +31,16 @@ router.post('/api/vehicle/delete', auth.verifyToken, vehicle.deleteVehicle);
 
 //  companyController
 const company = require("../controllers/companyController.js");
+router.get('/api/companies', auth.verifyToken, company.getAllCompany);
 router.post('/api/company', auth.verifyToken, company.getCompany);
-router.post('/api/companies', auth.verifyToken, company.getAllCompany);
 router.post('/api/company/edit', auth.verifyToken, company.editCompany);
 router.post('/api/company/delete', auth.verifyToken, company.deleteCompany);
+
+//  companyController
+const customer = require("../controllers/customerController.js");
+router.post('/api/customer', auth.verifyToken, customer.getCustomers);
+router.post('/api/customer/add', auth.verifyToken, customer.addCustomer);
+router.post('/api/customer/edit', auth.verifyToken, customer.editCustomer);
+router.post('/api/customer/delete', auth.verifyToken, customer.deleteCustomer);
 
 module.exports = router;
