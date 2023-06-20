@@ -36,7 +36,7 @@ router.post('/api/company', auth.verifyToken, company.getCompany);
 router.post('/api/company/edit', auth.verifyToken, company.editCompany);
 router.post('/api/company/delete', auth.verifyToken, company.deleteCompany);
 
-//  companyController
+//  customerController
 const customer = require("../controllers/customerController.js");
 router.post('/api/customer', auth.verifyToken, customer.getCustomers);
 router.post('/api/customer/add', auth.verifyToken, customer.addCustomer);
