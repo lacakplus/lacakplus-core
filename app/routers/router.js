@@ -29,4 +29,11 @@ router.post('/api/vehicle/add', auth.verifyToken, vehicle.addVehicle);
 router.post('/api/vehicle/edit', auth.verifyToken, vehicle.editVehicle);
 router.post('/api/vehicle/delete', auth.verifyToken, vehicle.deleteVehicle);
 
+//  companyController
+const company = require("../controllers/companyController.js");
+router.post('/api/company', auth.verifyToken, company.getCompany);
+router.post('/api/companies', auth.verifyToken, company.getAllCompany);
+router.post('/api/company/edit', auth.verifyToken, company.editCompany);
+router.post('/api/company/delete', auth.verifyToken, company.deleteCompany);
+
 module.exports = router;
