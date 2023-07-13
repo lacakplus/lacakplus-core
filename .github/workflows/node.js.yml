@@ -20,6 +20,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: testing.dhuwitku.com
-        username: samsudtesting@testing.dhuwitku.com
+        username: samsudtesting
         password: ftp.dhuwitku.com
         local-dir: ./app/
