@@ -21,5 +21,5 @@ jobs:
       with:
         server: testing.dhuwitku.com
         username: samsudtesting
-        password: ftp.dhuwitku.com
+        password: testing1101
         local-dir: ./app/
