@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: testing.dhuwitku.com
-        username: samsudtesting
+        username: samsudtesting@testing.dhuwitku.com
         password: testing1101
         local-dir: ./app/
