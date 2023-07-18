@@ -94,7 +94,7 @@ exports.register = (request, response) => {
         if (results.length != 0) {
             response.json({
                 code: 401,
-                message: "Email atau username sudah pernah digunakan"
+                message: "Email atau nama pengguna sudah pernah digunakan"
             });
             return
         }
@@ -123,7 +123,7 @@ exports.register = (request, response) => {
                 }
                 response.json({
                     code: 200,
-                    message: "Pendaftaran Berhasil",
+                    message: "Pendaftaran berhasil",
                     data: data
                 });
             })
@@ -146,13 +146,13 @@ exports.getUserById = (request, response) => {
         if (results.length == 0) {
             response.json({
                 code: 401,
-                message: "User tidak ditemukan dengan id : " + loginId
+                message: "User tidak ditemukan"
             });
             return
         }
         response.json({
             code: 200,
-            message: "Detail user ditemukan dengan id : "+ results[0].id +" dan nama : " + results[0].name,
+            message: "Detail user ditemukan",
             data: results[0]
         });
     })
@@ -190,7 +190,7 @@ exports.addUser = (request, response) => {
     const password = bcrypt.hashSync(request.body.password, 8)
     const phone = request.body.phone
 
-    db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone, userId], (error, results) => {
+    db.pool.query('SELECT * FROM m_user WHERE username = ?', [username], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -199,10 +199,28 @@ exports.addUser = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Pendaftaran data pengguna Berhasil"
-        });
+        if (results.length != 0) {
+            response.json({
+                code: 401,
+                message: "Nama pengguna sudah pernah digunakan"
+            });
+            return
+        }
+
+        db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone, userId], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Pendaftaran data pengguna berhasil"
+            });
+        })
     })
 }
 
@@ -229,7 +247,7 @@ exports.editUser = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Update data pengguna Berhasil"
+            message: "Update data pengguna berhasil"
         });
     })
 }
@@ -251,7 +269,7 @@ exports.deleteUser = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Delete data pengguna Berhasil"
+            message: "Delete data pengguna berhasil"
         });
     })
 }
