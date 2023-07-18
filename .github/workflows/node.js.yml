@@ -20,7 +20,6 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: testing.dhuwitku.com
-        username: samsudtesting@testing.dhuwitku.com
-        password: testing1101
-        local-dir: ./app/
+        server: api-dev-lacakplus.dhuwitku.com
+        username: lacakplus@api-dev-lacakplus.dhuwitku.com
+        password: lacakplus
