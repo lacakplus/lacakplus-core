@@ -1,7 +1,6 @@
 const db = require('../config/dbConfig.js');
 
-exports.addCustomer = (request, response) => {
-    //Data User
+exports.addLocation = (request, response) => {
     const userId = request.userId
     const id_company = request.body.id_company
     const name = request.body.name
@@ -10,8 +9,9 @@ exports.addCustomer = (request, response) => {
     const lat = request.body.lat
     const lng = request.body.lng
     const address = request.body.address
+    const type = request.body.type
 
-    db.pool.query('INSERT INTO m_customer (id_company, name, email, phone, lat, lng, address, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id_company, name, email, phone, lat, lng, address, userId], (error, results) => {
+    db.pool.query('INSERT INTO m_location (id_company, name, email, phone, lat, lng, address, type, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, name, email, phone, lat, lng, address, type, userId], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -22,15 +22,16 @@ exports.addCustomer = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Pendaftaran data pelanggan Berhasil"
+            message: "Pendaftaran data lokasi berhasil"
         });
     })
 }
 
-exports.getCustomers = (request, response) => {
+exports.getLocations = (request, response) => {
     const id_company = request.body.id_company
+    const type = request.body.type
 
-    db.pool.query('SELECT * FROM m_customer WHERE id_company = ? AND flag = 1', [id_company], (error, results) => {
+    db.pool.query('SELECT * FROM m_location WHERE id_company = ? AND type = ? AND flag = 1', [id_company, type], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -41,14 +42,14 @@ exports.getCustomers = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Berhasil mengambil data semua pelanggan",
+            message: "Berhasil mengambil data lokasi",
             data: results
         });
     })
 }
 
-exports.editCustomer = (request, response) => {
-    const id_customer = request.body.id_customer
+exports.editLocation = (request, response) => {
+    const id = request.body.id_location
     const name = request.body.name
     const email = request.body.email
     const phone = request.body.phone
@@ -56,9 +57,10 @@ exports.editCustomer = (request, response) => {
     const lng = request.body.lng
     const address = request.body.address
     const updater_id = request.userId
+    const type = request.body.type
 
-    db.pool.query('UPDATE m_customer SET name = ?, email = ?, phone = ?, lat = ?, lng = ?, address = ?, updater_id = ?, updated_at = ? WHERE id = ?', 
-        [name, email, phone, lat, lng, address, updater_id, new Date(), id_customer], (error, results) => {
+    db.pool.query('UPDATE m_location SET name = ?, email = ?, phone = ?, lat = ?, lng = ?, address = ?, type = ?, updater_id = ?, updated_at = ? WHERE id = ?', 
+        [name, email, phone, lat, lng, address, type, updater_id, new Date(), id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -69,16 +71,16 @@ exports.editCustomer = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Pelanggan Berhasil Diedit"
+            message: "Lokasi berhasil diedit"
         });
     })
 }
 
-exports.deleteCustomer = (request, response) => {
-    const id_customer = request.body.id_customer
+exports.deleteLocation = (request, response) => {
+    const id = request.body.id_location
     const updater_id = request.userId
     
-    db.pool.query('UPDATE m_customer SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id_customer], (error, results) => {
+    db.pool.query('UPDATE m_location SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -89,7 +91,7 @@ exports.deleteCustomer = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Pelanggan Berhasil Dihapus"
+            message: "Lokasi berhasil dihapus"
         });
     })
 }

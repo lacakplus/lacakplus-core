@@ -36,11 +36,11 @@ router.post('/api/company', auth.verifyToken, company.getCompany);
 router.post('/api/company/edit', auth.verifyToken, company.editCompany);
 router.post('/api/company/delete', auth.verifyToken, company.deleteCompany);
 
-//  companyController
-const customer = require("../controllers/customerController.js");
-router.post('/api/customer', auth.verifyToken, customer.getCustomers);
-router.post('/api/customer/add', auth.verifyToken, customer.addCustomer);
-router.post('/api/customer/edit', auth.verifyToken, customer.editCustomer);
-router.post('/api/customer/delete', auth.verifyToken, customer.deleteCustomer);
+//  locationController
+const location = require("../controllers/locationController.js");
+router.post('/api/location', auth.verifyToken, location.getLocations);
+router.post('/api/location/add', auth.verifyToken, location.addLocation);
+router.post('/api/location/edit', auth.verifyToken, location.editLocation);
+router.post('/api/location/delete', auth.verifyToken, location.deleteLocation);
 
 module.exports = router;

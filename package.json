@@ -1,7 +1,7 @@
 {
-  "name": "core-ngamplop",
+  "name": "core-lacakplus",
   "version": "1.0.0",
-  "description": "Core Ngamplop Application",
+  "description": "Core LacakPlus Application",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
