@@ -43,4 +43,8 @@ router.post('/api/location/add', auth.verifyToken, location.addLocation);
 router.post('/api/location/edit', auth.verifyToken, location.editLocation);
 router.post('/api/location/delete', auth.verifyToken, location.deleteLocation);
 
+//  travelController
+const travel = require("../controllers/travelController.js");
+router.post('/api/travel/add', auth.verifyToken, travel.addTravel);
+
 module.exports = router;
