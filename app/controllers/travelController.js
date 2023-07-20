@@ -24,9 +24,9 @@ exports.addTravel = (request, response) => {
         const id_travel = results.insertId
         let values = [];
         for (let i = 0; i < travel_dtl.length; i++) {
-            values.push([id_travel, travel_dtl[i].order, travel_dtl[i].id_location, travel_dtl[i].creator_id])
+            values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, travel_dtl[i].creator_id])
         }
-        db.pool.query('INSERT INTO tr_travel_dtl (id_travel, order, id_location, creator_id) VALUES ?', [values], (error, results) => {
+        db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
