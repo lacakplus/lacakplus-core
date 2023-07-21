@@ -37,7 +37,7 @@ exports.addTravel = (request, response) => {
             }
             response.json({
                 code: 200,
-                message: "Perjalanan berhasil dibuat",
+                message: "Berhasil buat Perjalanan",
                 data: results
             });
         })

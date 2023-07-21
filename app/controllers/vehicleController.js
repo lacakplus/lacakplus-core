@@ -90,7 +90,7 @@ exports.addVehicle = (request, response) => {
             }
             response.json({
                 code: 200,
-                message: "Kendaraan Berhasil Ditambahkan"
+                message: "Kendaraan ditemukan"
             });
         })
     })
@@ -135,7 +135,7 @@ exports.editVehicle = (request, response) => {
             }
             response.json({
                 code: 200,
-                message: "Kendaraan Berhasil Diedit"
+                message: "Berhasil edit Kendaraan"
             });
         })
     })
@@ -156,7 +156,7 @@ exports.deleteVehicle = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Kendaraan Berhasil Dihapus"
+            message: "Berhasil hapus Kendaraan"
         });
     })
 }

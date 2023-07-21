@@ -50,7 +50,7 @@ exports.login = (request, response) => {
                 }
                 response.json({
                     code: 200,
-                    message: "Login Berhasil",
+                    message: "Berhasil Login",
                     data: dataUser
                 });
             })
@@ -123,7 +123,7 @@ exports.register = (request, response) => {
                 }
                 response.json({
                     code: 200,
-                    message: "Pendaftaran berhasil",
+                    message: "Selamat Anda Berhasil Daftar Akun!",
                     data: data
                 });
             })
@@ -146,13 +146,13 @@ exports.getUserById = (request, response) => {
         if (results.length == 0) {
             response.json({
                 code: 401,
-                message: "User tidak ditemukan"
+                message: "Data pengguna tidak ditemukan"
             });
             return
         }
         response.json({
             code: 200,
-            message: "Detail user ditemukan",
+            message: "Data pengguna ditemukan",
             data: results[0]
         });
     })
@@ -172,7 +172,7 @@ exports.getUsers = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Berhasil mengambil data semua user",
+            message: "Data semua pengguna ditemukan",
             data: results
         });
     })
@@ -218,7 +218,7 @@ exports.addUser = (request, response) => {
             }
             response.json({
                 code: 200,
-                message: "Pendaftaran data pengguna berhasil"
+                message: "Berhasil mendaftaran akun"
             });
         })
     })
@@ -247,7 +247,7 @@ exports.editUser = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Update data pengguna berhasil"
+            message: "Berhasil edit data pengguna"
         });
     })
 }
@@ -269,7 +269,7 @@ exports.deleteUser = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Delete data pengguna berhasil"
+            message: "Berhasil menghapus data pengguna"
         });
     })
 }

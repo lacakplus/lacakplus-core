@@ -74,7 +74,7 @@ exports.editCompany = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Company Berhasil Diedit"
+            message: "Berhasil edit Company"
         });
     })
 }
@@ -94,7 +94,7 @@ exports.deleteCompany = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Company Berhasil Dihapus"
+            message: "Berhasil hapus Company"
         });
     })
 }

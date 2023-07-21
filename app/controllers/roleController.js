@@ -12,7 +12,7 @@ exports.getRoles = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Data role ditemukan",
+            message: "Role ditemukan",
             data: results
         });
     })

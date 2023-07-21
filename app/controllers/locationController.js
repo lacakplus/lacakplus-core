@@ -22,7 +22,7 @@ exports.addLocation = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Pendaftaran data lokasi berhasil"
+            message: "Berhasil menambahkan Lokasi"
         });
     })
 }
@@ -42,7 +42,7 @@ exports.getLocations = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Berhasil mengambil data lokasi",
+            message: "Lokasi ditemukan",
             data: results
         });
     })
@@ -71,7 +71,7 @@ exports.editLocation = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Lokasi berhasil diedit"
+            message: "Berhasil edit Lokasi"
         });
     })
 }
@@ -91,7 +91,7 @@ exports.deleteLocation = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Lokasi berhasil dihapus"
+            message: "Berhasil hapus Lokasi"
         });
     })
 }
