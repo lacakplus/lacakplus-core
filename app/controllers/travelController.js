@@ -79,7 +79,7 @@ exports.getTravelDtl = (request, response) => {
     const id_travel = request.body.id_travel
     const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
         'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
-        'WHERE id_travel = ? AND flag = 1'
+        'WHERE td.id_travel = ? AND td.flag = 1'
 
     db.pool.query(query, [id_travel], (error, results) => {
         if (error) {
