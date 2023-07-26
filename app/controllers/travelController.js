@@ -56,6 +56,13 @@ exports.getTravel = (request, response) => {
             });
             return
         }
+        if (results.length == 0) {
+            response.json({
+                code: 401,
+                message: "Data perjalanan tidak ditemukan"
+            });
+            return
+        }
         response.json({
             code: 200,
             message: "Data perjalanan ditemukan",
@@ -76,10 +83,63 @@ exports.getTravelDtl = (request, response) => {
             });
             return
         }
+        if (results.length == 0) {
+            response.json({
+                code: 401,
+                message: "Data perjalanan detail tidak ditemukan"
+            });
+            return
+        }
         response.json({
             code: 200,
-            message: "Data perjalanan ditemukan",
+            message: "Data perjalanan detail ditemukan",
             data: results
+        });
+    })
+}
+
+exports.updateTravelStatus = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const status = request.body.status
+    const id_travel = request.body.id_travel
+    let date = new Date();
+
+    db.pool.query('UPDATE tr_travel SET status = ?, updater_id = ?, updated_at = ? WHERE id = ?', [status, userId, date, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Berhasil update status travel"
+        });
+    })
+}
+
+exports.updateTravelDtlStatus = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const status = request.body.status
+    const id_travel_dtl = request.body.id_travel_dtl
+    let date = new Date();
+
+    db.pool.query('UPDATE tr_travel_dtl SET status = ?, updater_id = ?, updated_at = ? WHERE id = ?', [status, userId, date, id_travel_dtl], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Berhasil update status travel detail"
         });
     })
 }
