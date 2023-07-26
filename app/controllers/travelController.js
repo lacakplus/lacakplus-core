@@ -43,3 +43,43 @@ exports.addTravel = (request, response) => {
         })
     })
 }
+
+exports.getTravel = (request, response) => {
+    const id_company = request.body.id_company
+
+    db.pool.query('SELECT * FROM tr_travel WHERE id_company = ? AND flag = 1', [id_company], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Data perjalanan ditemukan",
+            data: results
+        });
+    })
+}
+
+exports.getTravelDtl = (request, response) => {
+    const id_travel = request.body.id_travel
+
+    db.pool.query('SELECT * FROM tr_travel_dtl WHERE id_travel = ? AND flag = 1', [id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Data perjalanan ditemukan",
+            data: results
+        });
+    })
+}
