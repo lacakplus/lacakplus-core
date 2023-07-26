@@ -48,7 +48,7 @@ exports.getTravel = (request, response) => {
     const id_company = request.body.id_company
     const query = 'SELECT t.*, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
         'JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 '+
-        'JOIN vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
+        'JOIN m_vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
         'WHERE t.id_company = ? AND t.flag = 1'
 
     db.pool.query(query, [id_company], (error, results) => {
@@ -78,7 +78,7 @@ exports.getTravel = (request, response) => {
 exports.getTravelDtl = (request, response) => {
     const id_travel = request.body.id_travel
     const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl '+
-        'JOIN location l ON td.id_location = l.id AND l.flag = 1 '+
+        'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
         'WHERE id_travel = ? AND flag = 1'
 
     db.pool.query(query, [id_travel], (error, results) => {
