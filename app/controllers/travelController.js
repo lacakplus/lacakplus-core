@@ -105,14 +105,48 @@ exports.getTravelDtl = (request, response) => {
     })
 }
 
-exports.updateTravelStatus = (request, response) => {
+exports.travelStart = (request, response) => {
     //Data User
     const userId = request.userId
-    const status = request.body.status
     const id_travel = request.body.id_travel
+    const id_travel_dtl = request.body.id_travel_dtl
+    const depart_at = request.body.depart_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel SET status = ?, updater_id = ?, updated_at = ? WHERE id = ?', [status, userId, date, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = 2, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [userId, date, depart_at, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [userId, date, depart_at, id_travel_dtl], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Berhasil mulai perjalanan"
+            });
+        })
+    })
+}
+
+exports.travelArriveCustomer = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const id_travel_dtl = request.body.id_travel_dtl
+    const arrive_at = request.body.arrive_at
+    let date = new Date();
+
+    db.pool.query('UPDATE tr_travel_dtl SET arrive_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [arrive_at, userId, date, id_travel_dtl], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -123,19 +157,20 @@ exports.updateTravelStatus = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Berhasil update status travel"
+            message: "Berhasil sampai di lokasi"
         });
     })
 }
 
-exports.updateTravelDtlStatus = (request, response) => {
+exports.travelDepartCustomer = (request, response) => {
     //Data User
     const userId = request.userId
-    const status = request.body.status
-    const id_travel_dtl = request.body.id_travel_dtl
+    const id_travel_dtl_now = request.body.id_travel_dtl_now
+    const id_travel_dtl_next = request.body.id_travel_dtl_next
+    const depart_at = request.body.depart_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel_dtl SET status = ?, updater_id = ?, updated_at = ? WHERE id = ?', [status, userId, date, id_travel_dtl], (error, results) => {
+    db.pool.query('UPDATE tr_travel_dtl SET status = 3, depart_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [depart_at, userId, date, id_travel_dtl_now], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -144,9 +179,53 @@ exports.updateTravelDtlStatus = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Berhasil update status travel detail"
-        });
+        db.pool.query('UPDATE tr_travel_dtl SET status = 2, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_travel_dtl_next], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Berhasil berangkat dari lokasi"
+            });
+        })
+    })
+}
+
+exports.travelComplete = (request, response) => {
+    //Data User
+    const userId = request.userId
+    const id_travel = request.body.id_travel
+    const id_travel_dtl = request.body.id_travel_dtl
+    const arrive_at = request.body.arrive_at
+    let date = new Date();
+
+    db.pool.query('UPDATE tr_travel SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [userId, date, arrive_at, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [userId, date, arrive_at, id_travel_dtl], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Perjalanan selesai"
+            });
+        })
     })
 }
