@@ -27,7 +27,27 @@ exports.addLocation = (request, response) => {
     })
 }
 
-exports.getLocations = (request, response) => {
+exports.getAllLocation = (request, response) => {
+    const id_company = request.body.id_company
+
+    db.pool.query('SELECT nama, id, type FROM m_location WHERE id_company = ? AND flag = 1 ORDER BY type', [id_company], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Semua lokasi ditemukan",
+            data: results
+        });
+    })
+}
+
+exports.getLocationByType = (request, response) => {
     const id_company = request.body.id_company
     const type = request.body.type
 

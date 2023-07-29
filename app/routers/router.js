@@ -38,7 +38,8 @@ router.post('/api/company/delete', auth.verifyToken, company.deleteCompany);
 
 //  locationController
 const location = require("../controllers/locationController.js");
-router.post('/api/location', auth.verifyToken, location.getLocations);
+router.post('/api/location/all', auth.verifyToken, location.getAllLocation);
+router.post('/api/location/type', auth.verifyToken, location.getLocationByType);
 router.post('/api/location/add', auth.verifyToken, location.addLocation);
 router.post('/api/location/edit', auth.verifyToken, location.editLocation);
 router.post('/api/location/delete', auth.verifyToken, location.deleteLocation);
