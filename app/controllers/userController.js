@@ -166,7 +166,7 @@ exports.getUsers = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    db.pool.query('SELECT name, id, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
+    db.pool.query('SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
         if (error) {
             response.json({
                 code: 400,

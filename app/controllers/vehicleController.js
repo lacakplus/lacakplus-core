@@ -1,6 +1,6 @@
 const db = require('../config/dbConfig.js');
 
-exports.getVehicle = (request, response) => {
+exports.getVehicleDetail = (request, response) => {
     const id = request.body.id_vehicle
     db.pool.query('SELECT * FROM m_vehicle WHERE id = ? AND flag = 1', [id], (error, results) => {
         if (error) {
@@ -27,8 +27,14 @@ exports.getVehicle = (request, response) => {
 }
 
 exports.getVehicles = (request, response) => {
-    const id = request.body.id_company
-    db.pool.query('SELECT * FROM m_vehicle WHERE id_company = ? AND flag = 1', [id], (error, results) => {
+    const id_company = request.body.id_company
+    const limit = request.body.limit || 10
+    var page = 0
+    if (page > 0) {
+        page = (request.body.page - 1) * limit
+    }
+
+    db.pool.query('SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
