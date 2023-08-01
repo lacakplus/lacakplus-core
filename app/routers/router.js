@@ -5,7 +5,7 @@ let auth = require("../middleware/auth.js");
  
 //  userController
 const user = require('../controllers/userController.js');
-router.get('/api/user/detail', auth.verifyToken, user.getUserDetail);
+router.post('/api/user/detail', auth.verifyToken, user.getUserDetail);
 router.post('/api/user/all', auth.verifyToken, user.getUsers);
 router.post('/api/user/add', auth.verifyToken, user.addUser);
 router.post('/api/user/update', auth.verifyToken, user.editUser);
