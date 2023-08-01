@@ -43,13 +43,6 @@ exports.getVehicles = (request, response) => {
             });
             return
         }
-        if (results.length == 0) {
-            response.json({
-                code: 401,
-                message: "Kendaraan tidak ditemukan"
-            });
-            return
-        }
         response.json({
             code: 200,
             message: "Kendaraan ditemukan",
