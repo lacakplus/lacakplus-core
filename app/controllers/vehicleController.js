@@ -30,7 +30,7 @@ exports.getVehicles = (request, response) => {
     const id_company = request.body.id_company
     const limit = request.body.limit || 10
     var page = 0
-    if (page > 0) {
+    if (request.body.page > 0) {
         page = (request.body.page - 1) * limit
     }
 
