@@ -160,8 +160,10 @@ exports.getUserById = (request, response) => {
 
 exports.getUsers = (request, response) => {
     const id_company = request.body.id_company
+    const limit = request.body.limit || 10
+    const page = (request.body.page - 1) * limit
 
-    db.pool.query('SELECT * FROM m_user WHERE id_company = ? AND flag = 1', [id_company], (error, results) => {
+    db.pool.query('SELECT name, id, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
         if (error) {
             response.json({
                 code: 400,

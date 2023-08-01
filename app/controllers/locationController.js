@@ -30,7 +30,7 @@ exports.addLocation = (request, response) => {
 exports.getAllLocation = (request, response) => {
     const id_company = request.body.id_company
 
-    db.pool.query('SELECT nama, id, type FROM m_location WHERE id_company = ? AND flag = 1 ORDER BY type', [id_company], (error, results) => {
+    db.pool.query('SELECT name, id, type FROM m_location WHERE id_company = ? AND flag = 1 ORDER BY type', [id_company], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
