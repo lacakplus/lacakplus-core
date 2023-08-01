@@ -161,10 +161,10 @@ exports.getUserDetail = (request, response) => {
 exports.getUsers = (request, response) => {
     const id_company = request.body.id_company
     const limit = request.body.limit || 10
-    var page = 0
-    // if (page > 0) {
-        page = (request.body.page - 1) * limit
-    // }
+    var page = (request.body.page - 1) * limit
+    if (page <= 0) {
+        page = 0
+    }
 
     db.pool.query('SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
         if (error) {
