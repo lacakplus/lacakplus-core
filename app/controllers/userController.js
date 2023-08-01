@@ -132,9 +132,9 @@ exports.register = (request, response) => {
 }
 
 exports.getUserDetail = (request, response) => {
-    const id = request.userId
+    const id = request.body.id_user
     
-    db.pool.query('SELECT * FROM m_user WHERE id = ?', [loginId], (error, results) => {
+    db.pool.query('SELECT * FROM m_user WHERE id = ?', [id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
