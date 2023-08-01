@@ -21,7 +21,7 @@ exports.getVehicleDetail = (request, response) => {
         response.json({
             code: 200,
             message: "Kendaraan ditemukan",
-            data: results
+            data: results[0]
         });
     })
 }
@@ -34,7 +34,7 @@ exports.getVehicles = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    db.pool.query('SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company], (error, results) => {
+    db.pool.query('SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
