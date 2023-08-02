@@ -163,7 +163,7 @@ exports.getUsers = (request, response) => {
     const limit = request.body.limit || 10
 
     var query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?'
-    if (request.body.limit == null) {
+    if (request.body.limit == null && request.body.page == null) {
         query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1'
     }
 
