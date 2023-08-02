@@ -161,12 +161,18 @@ exports.getUserDetail = (request, response) => {
 exports.getUsers = (request, response) => {
     const id_company = request.body.id_company
     const limit = request.body.limit || 10
+
+    var query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?'
+    if (request.body.limit == null) {
+        query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1'
+    }
+
     var page = 0
     if (request.body.page > 0) {
         page = (request.body.page - 1) * limit
     }
 
-    db.pool.query('SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?', [id_company, limit, page], (error, results) => {
+    db.pool.query(query, [id_company, limit, page], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
