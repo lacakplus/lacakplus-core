@@ -172,7 +172,7 @@ exports.getUsers = (request, response) => {
 
     query += (search != null? (" AND name like '%"+ search +"%'") : "")
     query += (id_company != null? (" AND id_company="+id_company) : "")
-    query += ((request.body.limit == null && request.body.page == null)? (" LIMIT "+limit+" OFFSET "+page) : "")    
+    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))    
 
     db.pool.query(query, (error, results) => {
         if (error) {
