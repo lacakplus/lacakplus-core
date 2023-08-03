@@ -28,17 +28,19 @@ exports.getVehicleDetail = (request, response) => {
 
 exports.getVehicles = (request, response) => {
     const id_company = request.body.id_company
+    const search = request.body.search
     const limit = request.body.limit || 10
-
-    var query = 'SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?'
-    if (request.body.limit == null && request.body.page == null) {
-        query = 'SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE id_company = ? AND flag = 1'
-    }
-
+ 
     var page = 0
     if (request.body.page > 0) {
         page = (request.body.page - 1) * limit
     }
+
+    var query = 'SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE flag = 1'
+
+    query += (search != null? (" AND (name like '%"+ search +"%' OR no_plate like '%"+ search +"%' OR type like '%"+ search +"%')") : "")
+    query += (id_company != null? (" AND id_company="+id_company) : "")
+    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page)) 
 
     db.pool.query(query, [id_company, limit, page], (error, results) => {
         if (error) {
