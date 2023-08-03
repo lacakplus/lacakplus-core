@@ -64,11 +64,10 @@ exports.getAllLocation = (request, response) => {
     })
 }
 
-exports.getLocationByType = (request, response) => {
-    const id_company = request.body.id_company
-    const type = request.body.type
+exports.getLocationDetail = (request, response) => {
+    const id = request.body.id_location
 
-    db.pool.query('SELECT * FROM m_location WHERE id_company = ? AND type = ? AND flag = 1', [id_company, type], (error, results) => {
+    db.pool.query('SELECT * FROM m_location WHERE id = ? AND flag = 1', [id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -80,7 +79,7 @@ exports.getLocationByType = (request, response) => {
         response.json({
             code: 200,
             message: "Lokasi ditemukan",
-            data: results
+            data: results[0]
         });
     })
 }
