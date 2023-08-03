@@ -160,6 +160,7 @@ exports.getUserDetail = (request, response) => {
 
 exports.getUsers = (request, response) => {
     const id_company = request.body.id_company
+    const id_role = request.body.id_role
     const search = request.body.search
     const limit = request.body.limit || 10
 
@@ -172,6 +173,7 @@ exports.getUsers = (request, response) => {
 
     query += (search != null? (" AND name like '%"+ search +"%'") : "")
     query += (id_company != null? (" AND id_company="+id_company) : "")
+    query += (id_role != null? (" AND id_role="+id_role) : "")
     query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))    
 
     db.pool.query(query, (error, results) => {
