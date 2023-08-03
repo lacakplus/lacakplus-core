@@ -70,7 +70,7 @@ exports.addVehicle = (request, response) => {
     const creator_id = request.userId
     const updater_id = request.userId
 
-    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1', [no_plate], (error, results) => {
+    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1 AND id_company = ?', [no_plate, id_company], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
