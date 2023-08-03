@@ -168,7 +168,7 @@ exports.getUsers = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    var query = "SELECT id, name, phone FROM m_user WHERE AND flag = 1"
+    var query = "SELECT id, name, phone FROM m_user WHERE flag = 1"
 
     query += (search != null? (" AND name like '%"+ search +"%'") : "")
     query += (id_company != null? (" AND id_company="+id_company) : "")
