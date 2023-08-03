@@ -163,17 +163,18 @@ exports.getUsers = (request, response) => {
     const search = request.body.search
     const limit = request.body.limit || 10
 
-    var query = "SELECT id, name, phone FROM m_user WHERE name like '%"+ search +"%' AND id_company = ? AND flag = 1 LIMIT ? OFFSET ?"
-    if (request.body.limit == null && request.body.page == null) {
-        query = "SELECT id, name, phone FROM m_user WHERE name like '%"+ search +"%' AND id_company = ? AND flag = 1"
-    }
-
     var page = 0
     if (request.body.page > 0) {
         page = (request.body.page - 1) * limit
     }
 
-    db.pool.query(query, [id_company, limit, page], (error, results) => {
+    var query = "SELECT id, name, phone FROM m_user WHERE AND flag = 1"
+
+    query += (search != null? (" AND name like '%"+ search +"%'") : "")
+    query += (id_company != null? (" AND id_company="+id_company) : "")
+    query += ((request.body.limit == null && request.body.page == null)? (" LIMIT "+limit+" OFFSET "+page) : "")    
+
+    db.pool.query(query, (error, results) => {
         if (error) {
             response.json({
                 code: 400,
