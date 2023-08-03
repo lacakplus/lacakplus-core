@@ -170,7 +170,7 @@ exports.getUsers = (request, response) => {
     }
 
     var query = "SELECT u.id, u.name, u.phone, r.name AS name_role FROM m_user u "+
-        "JOIN m_role r ON u.id_role=r.id AND r.flag = 1"+
+        "JOIN m_role r ON u.id_role=r.id AND r.flag = 1 "+
         "WHERE u.flag = 1"
 
     query += (search != null? (" AND u.name like '%"+ search +"%'") : "")
