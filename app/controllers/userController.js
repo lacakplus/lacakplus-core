@@ -160,11 +160,12 @@ exports.getUserDetail = (request, response) => {
 
 exports.getUsers = (request, response) => {
     const id_company = request.body.id_company
+    const search = request.body.search
     const limit = request.body.limit || 10
 
-    var query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1 LIMIT ? OFFSET ?'
+    var query = "SELECT id, name, phone FROM m_user WHERE name like '%"+ search +"%' AND id_company = ? AND flag = 1 LIMIT ? OFFSET ?"
     if (request.body.limit == null && request.body.page == null) {
-        query = 'SELECT id, name, phone FROM m_user WHERE id_company = ? AND flag = 1'
+        query = 'SELECT id, name, phone FROM m_user WHERE name like '%"+ search +"%' AND id_company = ? AND flag = 1'
     }
 
     var page = 0
