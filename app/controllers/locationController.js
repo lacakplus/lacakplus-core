@@ -29,8 +29,25 @@ exports.addLocation = (request, response) => {
 
 exports.getAllLocation = (request, response) => {
     const id_company = request.body.id_company
+    const type = request.body.type
+    const search = request.body.search
+    const limit = request.body.limit || 10
 
-    db.pool.query('SELECT name, id, type FROM m_location WHERE id_company = ? AND flag = 1 ORDER BY type', [id_company], (error, results) => {
+    var page = 0
+    if (request.body.page > 0) {
+        page = (request.body.page - 1) * limit
+    }
+
+    var query = "SELECT id, name, type FROM m_location WHERE flag = 1"
+
+    query += (search != null? (" AND name like '%"+ search +"%'") : "")
+    query += (id_company != null? (" AND id_company="+id_company) : "")
+    query += (type != null? (" AND type="+type) : "")
+    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))
+
+    query += " ORDER BY type"
+
+    db.pool.query(query, (error, results) => {
         if (error) {
             response.json({
                 code: 400,

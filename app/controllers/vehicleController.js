@@ -97,7 +97,7 @@ exports.addVehicle = (request, response) => {
             }
             response.json({
                 code: 200,
-                message: "Kendaraan ditemukan"
+                message: "Kendaraan berhasil ditambahkan"
             });
         })
     })
