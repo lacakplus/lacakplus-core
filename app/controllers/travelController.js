@@ -46,10 +46,19 @@ exports.addTravel = (request, response) => {
 
 exports.getTravel = (request, response) => {
     const id_company = request.body.id_company
-    const query = 'SELECT t.*, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
+    const limit = request.body.limit || 10
+ 
+    var page = 0
+    if (request.body.page > 0) {
+        page = (request.body.page - 1) * limit
+    }
+
+    var query = 'SELECT t.*, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
         'JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 '+
         'JOIN m_vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
         'WHERE t.id_company = ? AND t.flag = 1'
+
+    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page)) 
 
     db.pool.query(query, [id_company], (error, results) => {
         if (error) {
