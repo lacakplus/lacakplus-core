@@ -11,6 +11,10 @@ exports.addTravel = (request, response) => {
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
+    let date_ob = new Date();
+    let date = ("0" + date_ob.getDate()).slice(-2);
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+    let year = ("" + date_ob.getFullYear()).slice(-2);
 
     db.pool.query('INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id], (error, results) => {
         if (error) {
@@ -22,11 +26,8 @@ exports.addTravel = (request, response) => {
             return
         }
         const id_travel = results.insertId
-        let values = [];
-        for (let i = 0; i < travel_dtl.length; i++) {
-            values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, travel_dtl[i].creator_id])
-        }
-        db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
+        let travelNumber = year + month + date + "-" + id_company + "-" + id_travel
+        db.pool.query("UPDATE tr_travel SET travel_number = ? WHERE id = ?", [travelNumber, id_travel], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -35,11 +36,25 @@ exports.addTravel = (request, response) => {
                 });
                 return
             }
-            response.json({
-                code: 200,
-                message: "Berhasil buat Perjalanan",
-                data: results
-            });
+            let values = [];
+            for (let i = 0; i < travel_dtl.length; i++) {
+                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, travel_dtl[i].creator_id])
+            }
+            db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
+                if (error) {
+                    response.json({
+                        code: 400,
+                        message: error.message,
+                        error: error
+                    });
+                    return
+                }
+                response.json({
+                    code: 200,
+                    message: "Berhasil buat Perjalanan",
+                    data: results
+                });
+            })
         })
     })
 }
@@ -53,7 +68,7 @@ exports.getTravel = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    var query = 'SELECT t.id, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
+    var query = 'SELECT t.id, t.travel_number, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
         'JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 '+
         'JOIN m_vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
         'WHERE t.id_company = ? AND t.flag = 1'
