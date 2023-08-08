@@ -54,4 +54,9 @@ router.post('/api/travel/travelArriveCustomer', auth.verifyToken, travel.travelA
 router.post('/api/travel/travelDepartCustomer', auth.verifyToken, travel.travelDepartCustomer);
 router.post('/api/travel/travelComplete', auth.verifyToken, travel.travelComplete);
 
+//  trackingController
+const tracking = require("../controllers/trackingController.js");
+router.post('/api/tracking/add', auth.verifyToken, tracking.addTracking);
+router.post('/api/tracking', auth.verifyToken, tracking.getTracking);
+
 module.exports = router;
