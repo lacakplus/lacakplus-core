@@ -18,8 +18,7 @@ exports.addTracking = (request, response) => {
         }
         response.json({
             code: 200,
-            message: "Data tracking berhasil di tambahkan",
-            data: results
+            message: "Data tracking berhasil di tambahkan"
         });
     })
 }
