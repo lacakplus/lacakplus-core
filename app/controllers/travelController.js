@@ -75,7 +75,7 @@ exports.getTravel = (request, response) => {
     var query = "SELECT t.id, t.travel_number, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t "+
         'JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 '+
         'JOIN m_vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
-        'WHERE AND t.flag = 1'
+        'WHERE t.flag = 1'
 
     query += (search != null? (" AND (t.travel_number like '%"+ search +"%' OR u.name '%"+ search +"%' OR v.name like '%"+ search +"%' OR v.no_plate like '%"+ search +"%')") : "")
     query += (id_company != null? (" AND t.id_company="+id_company) : "")
