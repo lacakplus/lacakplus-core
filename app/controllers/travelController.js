@@ -7,7 +7,7 @@ exports.addTravel = (request, response) => {
     const id_driver = request.body.id_driver
     const depart_plan_at = request.body.depart_plan_at
     const arrive_plan_at = request.body.arrive_plan_at
-    const creator_id = request.body.creator_id
+    const userId = request.userId
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
@@ -16,7 +16,7 @@ exports.addTravel = (request, response) => {
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
     let year = ("" + date_ob.getFullYear()).slice(-2);
 
-    db.pool.query('INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id], (error, results) => {
+    db.pool.query('INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, userId], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -38,7 +38,7 @@ exports.addTravel = (request, response) => {
             }
             let values = [];
             for (let i = 0; i < travel_dtl.length; i++) {
-                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, travel_dtl[i].creator_id])
+                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, userId])
             }
             db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
                 if (error) {
@@ -52,6 +52,59 @@ exports.addTravel = (request, response) => {
                 response.json({
                     code: 200,
                     message: "Berhasil buat Perjalanan",
+                    data: results
+                });
+            })
+        })
+    })
+}
+
+exports.editTravel = (request, response) => {
+    //Data Travel
+    const id_travel = request.body.id_travel
+    const id_vehicle = request.body.id_vehicle
+    const id_driver = request.body.id_driver
+    const depart_plan_at = request.body.depart_plan_at
+    const arrive_plan_at = request.body.arrive_plan_at
+    const userId = request.userId
+
+    //Data Travel Dtl
+    const travel_dtl = request.body.travel_dtl
+
+    db.pool.query('UPDATE tr_travel SET id_vehicle = ?, id_driver = ?, depart_plan_at = ?, arrive_plan_at = ?, updater_id = ? WHERE id_travel = ?', [id_vehicle, id_driver, depart_plan_at, arrive_plan_at, userId, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        db.pool.query('DELETE FROM tr_travel_dtl WHERE id_travel = ?', [id_travel], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            let values = [];
+            for (let i = 0; i < travel_dtl.length; i++) {
+                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, userId, userId])
+            }
+            db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id, updater_id) VALUES ?', [values], (error, results) => {
+                if (error) {
+                    response.json({
+                        code: 400,
+                        message: error.message,
+                        error: error
+                    });
+                    return
+                }
+                response.json({
+                    code: 200,
+                    message: "Berhasil edit Perjalanan",
                     data: results
                 });
             })
