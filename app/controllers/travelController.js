@@ -60,7 +60,11 @@ exports.addTravel = (request, response) => {
 }
 
 exports.getTravel = (request, response) => {
+    const id_user = request.userId
+    const id_role = request.body.id_role
+    const status = request.body.status
     const id_company = request.body.id_company
+    const search = request.body.search
     const limit = request.body.limit || 10
  
     var page = 0
@@ -68,14 +72,20 @@ exports.getTravel = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    var query = 'SELECT t.id, t.travel_number, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
+    var query = "SELECT t.id, t.travel_number, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t "+
         'JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 '+
         'JOIN m_vehicle v ON t.id_vehicle = v.id AND v.flag = 1 '+
-        'WHERE t.id_company = ? AND t.flag = 1'
+        'WHERE AND t.flag = 1'
+
+    query += (search != null? (" AND (t.travel_number like '%"+ search +"%' OR u.name '%"+ search +"%' OR v.name like '%"+ search +"%' OR v.no_plate like '%"+ search +"%')") : "")
+    query += (id_company != null? (" AND t.id_company="+id_company) : "")
+    query += (status != null? (" AND t.status="+status) : "")
+    query += (id_role == 5? (" AND t.id_driver="+id_user) : "")
+    query += " ORDER BY t.created_at DESC"
 
     query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page)) 
 
-    db.pool.query(query, [id_company], (error, results) => {
+    db.pool.query(query, (error, results) => {
         if (error) {
             response.json({
                 code: 400,
