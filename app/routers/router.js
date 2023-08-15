@@ -47,12 +47,13 @@ router.post('/api/location/delete', auth.verifyToken, location.deleteLocation);
 //  travelController
 const travel = require("../controllers/travelController.js");
 router.post('/api/travel/add', auth.verifyToken, travel.addTravel);
-router.post('/api/travel/getTravel', auth.verifyToken, travel.getTravel);
-router.post('/api/travelDtl/getTravelDtl', auth.verifyToken, travel.getTravelDtl);
-router.post('/api/travel/travelStart', auth.verifyToken, travel.travelStart);
-router.post('/api/travel/travelArriveCustomer', auth.verifyToken, travel.travelArriveCustomer);
-router.post('/api/travel/travelDepartCustomer', auth.verifyToken, travel.travelDepartCustomer);
-router.post('/api/travel/travelComplete', auth.verifyToken, travel.travelComplete);
+router.post('/api/travel', auth.verifyToken, travel.getTravel);
+router.post('/api/travel/edit-status', auth.verifyToken, travel.updateTravelStatus);
+router.post('/api/travel/start', auth.verifyToken, travel.travelStart);
+router.post('/api/travel/arrive-customer', auth.verifyToken, travel.travelArriveCustomer);
+router.post('/api/travel/depart-customer', auth.verifyToken, travel.travelDepartCustomer);
+router.post('/api/travel/complete', auth.verifyToken, travel.travelComplete);
+router.post('/api/travel-dtl', auth.verifyToken, travel.getTravelDtl);
 
 //  trackingController
 const tracking = require("../controllers/trackingController.js");

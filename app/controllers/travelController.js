@@ -139,6 +139,28 @@ exports.getTravelDtl = (request, response) => {
     })
 }
 
+exports.updateTravelStatus = (request, response) => {
+    const userId = request.userId
+    const id_travel = request.body.id_travel
+    const status = request.body.status
+    let date = new Date();
+
+    db.pool.query('UPDATE tr_travel SET status = ?, updater_id = ?, updated_at = ? WHERE id = ?', [status, userId, date, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Berhasil update status perjalanan"
+        });
+    })
+}
+
 exports.travelStart = (request, response) => {
     //Data User
     const userId = request.userId
