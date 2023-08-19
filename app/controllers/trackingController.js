@@ -3,11 +3,13 @@ const db = require('../config/dbConfig.js');
 exports.addTracking = (request, response) => {
     //Data Tracking
     const userId = request.userId
-    const id_travel = request.body.id_travel
-    const lat = request.body.lat
-    const lng = request.body.lng
+    const data_tracking = request.body.data_tracking
 
-    db.pool.query('INSERT INTO tr_tracking (id_driver, id_travel, lat, lng) VALUES (?, ?, ?, ?)', [userId, id_travel, lat, lng], (error, results) => {
+    let values = [];
+    for (let i = 0; i < data_tracking.length; i++) {
+        values.push([userId, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng])
+    }
+    db.pool.query('INSERT INTO tr_tracking (id_driver, id_travel, lat, lng) VALUES ?', [values], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
