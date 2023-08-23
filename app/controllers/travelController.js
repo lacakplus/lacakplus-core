@@ -163,8 +163,8 @@ exports.getTravel = (request, response) => {
 }
 
 exports.getDetailTravel = (request, response) => {
-    const id = request.body.id
-    db.pool.query('SELECT * FROM tr_travel WHERE id = ? AND flag = 1', [id], (error, results) => {
+    const id_travel = request.body.id_travel
+    db.pool.query('SELECT * FROM tr_travel WHERE id = ? AND flag = 1', [id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
