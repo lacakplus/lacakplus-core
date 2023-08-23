@@ -162,6 +162,32 @@ exports.getTravel = (request, response) => {
     })
 }
 
+exports.getDetailTravel = (request, response) => {
+    const id = request.body.id
+    db.pool.query('SELECT * FROM tr_travel WHERE id = ? AND flag = 1', [id], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        if (results.length == 0) {
+            response.json({
+                code: 401,
+                message: "Perjalanan tidak ditemukan"
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Perjalanan ditemukan",
+            data: results[0]
+        });
+    })
+}
+
 exports.getTravelDtl = (request, response) => {
     const id_travel = request.body.id_travel
     const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
