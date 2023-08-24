@@ -49,7 +49,7 @@ exports.getVehiclePos = (request, response) => {
     const id_company = request.body.id_company
 
     const query = 'SELECT * FROM ( '+
-        'SELECT v.name, t.lat, t.lng, t.created_at, ROW_NUMBER() OVER (ORDER BY t.created_at DESC) as RN FROM tr_tracking t '+
+        'SELECT v.name, t.lat, t.lng, ROW_NUMBER() OVER (PARTITION BY tv.id_company ORDER BY t.created_at DESC) as RN FROM tr_tracking t '+
         'JOIN tr_travel tv ON tv.id = t.id_travel AND tv.id_company = ? '+
         'JOIN m_vehicle v ON v.id = tv.id_vehicle '+
         ') sub WHERE RN = 1'
