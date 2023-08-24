@@ -48,11 +48,14 @@ exports.getTracking = (request, response) => {
 exports.getVehiclePos = (request, response) => {
     const id_company = request.body.id_company
 
-    const query = 'SELECT * FROM ( '+
-        'SELECT v.name, t.lat, t.lng, ROW_NUMBER() OVER (PARTITION BY tv.id_company ORDER BY t.created_at DESC) as RN FROM tr_tracking t '+
-        'JOIN tr_travel tv ON tv.id = t.id_travel AND tv.id_company = ? '+
-        'JOIN m_vehicle v ON v.id = tv.id_vehicle '+
-        ') sub WHERE RN = 1'
+    const query = 'SELECT g.name, tr.lat, tr.lng, tr.created_at FROM tr_tracking tr '+
+        'JOIN tr_travel tv ON tv.id = tr.id_travel '+
+        'JOIN ( '+
+            'SELECT v.id, MAX(tr.created_at) AS max_date, v.name FROM tr_tracking tr '+
+            'JOIN tr_travel tv ON tv.id = tr.id_travel AND tv.id_company = ? '+
+            'JOIN m_vehicle v ON v.id = tv.id_vehicle '+
+            'GROUP BY v.id, v.name '+
+        ') g ON g.id = tv.id_vehicle AND g.max_date = tr.created_at'
 
     db.pool.query(query, [id_company], (error, results) => {
         if (error) {
