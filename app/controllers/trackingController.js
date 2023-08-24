@@ -48,9 +48,10 @@ exports.getTracking = (request, response) => {
 exports.getVehiclePos = (request, response) => {
     const id_company = request.body.id_company
 
-    const query = 'SELECT * from '
-        '(SELECT v.name, t.lat, t.lng, t.created_at, ROW_NUMBER() OVER (ORDER BY t.created_at DESC) as RN FROM tr_tracking t '+
-        'JOIN m_vehicle v ON v.id = t.id_vehicle AND v.id_company = ?) sub WHERE RN = 1'
+    const query = 'SELECT * FROM ( '+
+        'SELECT v.name, t.lat, t.lng, t.created_at, ROW_NUMBER() OVER (ORDER BY t.created_at DESC) as RN FROM tr_tracking t '+
+        'JOIN m_vehicle v ON v.id = t.id_vehicle AND v.id_company = ? '+
+        ') sub WHERE RN = 1'
 
     db.pool.query(query, [id_company], (error, results) => {
         if (error) {
