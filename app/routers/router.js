@@ -61,5 +61,6 @@ router.post('/api/travel-dtl', auth.verifyToken, travel.getTravelDtl);
 const tracking = require("../controllers/trackingController.js");
 router.post('/api/tracking/add', auth.verifyToken, tracking.addTracking);
 router.post('/api/tracking', auth.verifyToken, tracking.getTracking);
+router.post('/api/tracking/vehicle', auth.verifyToken, tracking.getVehiclePos);
 
 module.exports = router;
