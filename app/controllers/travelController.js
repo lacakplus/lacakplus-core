@@ -196,7 +196,7 @@ exports.getDetailTravel = (request, response) => {
 
 exports.getTravelDtl = (request, response) => {
     const id_travel = request.body.id_travel
-    const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+    const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
         'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
         'WHERE td.id_travel = ? AND td.flag = 1'
 
@@ -318,9 +318,9 @@ exports.travelArriveCustomer = (request, response) => {
             });
             return
         }
-        const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
-        'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
-        'WHERE td.id_travel = ? AND td.flag = 1'
+        const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+            'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
+            'WHERE td.id_travel = ? AND td.flag = 1'
 
         db.pool.query(query, [id_travel], (error, results) => {
             if (error) {
@@ -374,9 +374,9 @@ exports.travelDepartCustomer = (request, response) => {
                 });
                 return
             }
-            const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
-            'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
-            'WHERE td.id_travel = ? AND td.flag = 1'
+            const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+                'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
+                'WHERE td.id_travel = ? AND td.flag = 1'
 
             db.pool.query(query, [id_travel], (error, results) => {
                 if (error) {
