@@ -304,6 +304,7 @@ exports.travelStart = (request, response) => {
 exports.travelArriveCustomer = (request, response) => {
     //Data User
     const userId = request.userId
+    const id_travel = request.body.id_travel
     const id_travel_dtl = request.body.id_travel_dtl
     const arrive_at = request.body.arrive_at
     let date = new Date();
@@ -317,16 +318,39 @@ exports.travelArriveCustomer = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Berhasil sampai di lokasi"
-        });
+        const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+        'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
+        'WHERE td.id_travel = ? AND td.flag = 1'
+
+        db.pool.query(query, [id_travel], (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            if (results.length == 0) {
+                response.json({
+                    code: 401,
+                    message: "Data perjalanan detail tidak ditemukan"
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Data perjalanan detail ditemukan",
+                data: results
+            });
+        })
     })
 }
 
 exports.travelDepartCustomer = (request, response) => {
     //Data User
     const userId = request.userId
+    const id_travel = request.body.id_travel
     const id_travel_dtl_now = request.body.id_travel_dtl_now
     const id_travel_dtl_next = request.body.id_travel_dtl_next
     const depart_at = request.body.depart_at
@@ -350,10 +374,32 @@ exports.travelDepartCustomer = (request, response) => {
                 });
                 return
             }
-            response.json({
-                code: 200,
-                message: "Berhasil berangkat dari lokasi"
-            });
+            const query = 'SELECT td.*, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+            'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
+            'WHERE td.id_travel = ? AND td.flag = 1'
+
+            db.pool.query(query, [id_travel], (error, results) => {
+                if (error) {
+                    response.json({
+                        code: 400,
+                        message: error.message,
+                        error: error
+                    });
+                    return
+                }
+                if (results.length == 0) {
+                    response.json({
+                        code: 401,
+                        message: "Data perjalanan detail tidak ditemukan"
+                    });
+                    return
+                }
+                response.json({
+                    code: 200,
+                    message: "Data perjalanan detail ditemukan",
+                    data: results
+                });
+            })
         })
     })
 }
