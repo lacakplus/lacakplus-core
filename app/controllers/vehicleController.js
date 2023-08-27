@@ -1,6 +1,6 @@
 const db = require('../config/dbConfig.js');
 
-exports.getVehicleDetail = (request, response) => {
+exports.getVehicleById = (request, response) => {
     const id = request.body.id_vehicle
     db.pool.query('SELECT * FROM m_vehicle WHERE id = ? AND flag = 1', [id], (error, results) => {
         if (error) {

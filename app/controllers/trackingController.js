@@ -25,7 +25,7 @@ exports.addTracking = (request, response) => {
     })
 }
 
-exports.getTracking = (request, response) => {
+exports.getTrackings = (request, response) => {
     const id_travel = request.body.id_travel
 
     db.pool.query('SELECT * FROM tr_tracking WHERE id_travel = ?', [id_travel], (error, results) => {
@@ -45,7 +45,7 @@ exports.getTracking = (request, response) => {
     })
 }
 
-exports.getVehiclePos = (request, response) => {
+exports.getPositionVehicles = (request, response) => {
     const id_company = request.body.id_company
 
     const query = 'SELECT g.name, tr.lat, tr.lng, tr.created_at FROM tr_tracking tr '+

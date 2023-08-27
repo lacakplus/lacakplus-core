@@ -27,7 +27,7 @@ exports.addLocation = (request, response) => {
     })
 }
 
-exports.getAllLocation = (request, response) => {
+exports.getLocations = (request, response) => {
     const id_company = request.body.id_company
     const type = request.body.type
     const search = request.body.search
@@ -63,7 +63,7 @@ exports.getAllLocation = (request, response) => {
     })
 }
 
-exports.getLocationDetail = (request, response) => {
+exports.getLocationById = (request, response) => {
     const id = request.body.id_location
 
     db.pool.query('SELECT * FROM m_location WHERE id = ? AND flag = 1', [id], (error, results) => {

@@ -1,6 +1,6 @@
 const db = require('../config/dbConfig.js');
 
-exports.getAllCompany = (request, response) => {
+exports.getCompanies = (request, response) => {
     db.pool.query('SELECT * FROM m_company WHERE flag = 1', (error, results) => {
         if (error) {
             response.json({
@@ -25,7 +25,7 @@ exports.getAllCompany = (request, response) => {
     })
 }
 
-exports.getCompany = (request, response) => {
+exports.getCompanyById = (request, response) => {
     const id = request.body.id_company
     db.pool.query('SELECT * FROM m_company WHERE id = ? AND flag = 1', [id], (error, results) => {
         if (error) {

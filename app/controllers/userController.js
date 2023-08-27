@@ -131,7 +131,7 @@ exports.register = (request, response) => {
     })
 }
 
-exports.getUserDetail = (request, response) => {
+exports.getUserById = (request, response) => {
     const id = request.body.id_user
     
     db.pool.query('SELECT * FROM m_user WHERE id = ?', [id], (error, results) => {

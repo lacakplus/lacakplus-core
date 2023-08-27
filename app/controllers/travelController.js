@@ -112,7 +112,7 @@ exports.editTravel = (request, response) => {
     })
 }
 
-exports.getTravel = (request, response) => {
+exports.getTravels = (request, response) => {
     const id_user = request.userId
     const id_role = request.body.id_role
     const status = request.body.status
@@ -162,7 +162,7 @@ exports.getTravel = (request, response) => {
     })
 }
 
-exports.getDetailTravel = (request, response) => {
+exports.getTravelById = (request, response) => {
     const id_travel = request.body.id_travel
 
     var query = 'SELECT t.id, t.travel_number, t.id_company, t.depart_plan_at, t.depart_at, t.arrive_plan_at, t.arrive_at, t.status, t.created_at, u.name AS name_driver, v.name AS name_vehicle, v.no_plate FROM tr_travel t '+
