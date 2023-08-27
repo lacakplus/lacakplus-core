@@ -430,10 +430,32 @@ exports.travelComplete = (request, response) => {
                 });
                 return
             }
-            response.json({
-                code: 200,
-                message: "Perjalanan selesai"
-            });
+            const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
+                'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
+                'WHERE td.id_travel = ? AND td.flag = 1'
+
+            db.pool.query(query, [id_travel], (error, results) => {
+                if (error) {
+                    response.json({
+                        code: 400,
+                        message: error.message,
+                        error: error
+                    });
+                    return
+                }
+                if (results.length == 0) {
+                    response.json({
+                        code: 401,
+                        message: "Data perjalanan detail tidak ditemukan"
+                    });
+                    return
+                }
+                response.json({
+                    code: 200,
+                    message: "Data perjalanan detail ditemukan",
+                    data: results
+                });
+            })
         })
     })
 }
