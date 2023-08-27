@@ -55,7 +55,7 @@ router.post('/api/travel/start', auth.verifyToken, travel.travelStart);
 router.post('/api/travel/arrive-customer', auth.verifyToken, travel.travelArriveCustomer);
 router.post('/api/travel/depart-customer', auth.verifyToken, travel.travelDepartCustomer);
 router.post('/api/travel/complete', auth.verifyToken, travel.travelComplete);
-router.post('/api/travel-details', auth.verifyToken, travel.getTravelDtl);
+router.post('/api/travel-details', auth.verifyToken, travel.getTravelDetails);
 
 //  trackingController
 const tracking = require("../controllers/trackingController.js");

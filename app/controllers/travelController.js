@@ -194,7 +194,7 @@ exports.getTravelById = (request, response) => {
     })
 }
 
-exports.getTravelDtl = (request, response) => {
+exports.getTravelDetails = (request, response) => {
     const id_travel = request.body.id_travel
     const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
         'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
