@@ -169,7 +169,7 @@ exports.getUsers = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    var query = "SELECT u.id, u.name, u.phone, r.id, r.name AS name_role FROM m_user u "+
+    var query = "SELECT u.id, u.name, u.phone, r.id AS id_role, r.name AS name_role FROM m_user u "+
         "JOIN m_role r ON u.id_role=r.id AND r.flag = 1 "+
         "WHERE u.flag = 1"
 
