@@ -133,8 +133,12 @@ exports.register = (request, response) => {
 
 exports.getUserById = (request, response) => {
     const id = request.body.id_user
-    
-    db.pool.query('SELECT * FROM m_user WHERE id = ?', [id], (error, results) => {
+
+    var query = "SELECT u.id, u.name, u.phone, r.name AS name_role FROM m_user u "+
+        "JOIN m_role r ON u.id_role=r.id AND r.flag = 1 "+
+        "WHERE u.flag = 1 AND u.id = ?"
+
+    db.pool.query(query, [id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -169,7 +173,7 @@ exports.getUsers = (request, response) => {
         page = (request.body.page - 1) * limit
     }
 
-    var query = "SELECT u.id, u.name, u.phone, r.id AS id_role, r.name AS name_role FROM m_user u "+
+    var query = "SELECT u.id, u.name, u.phone, r.name AS name_role FROM m_user u "+
         "JOIN m_role r ON u.id_role=r.id AND r.flag = 1 "+
         "WHERE u.flag = 1"
 
