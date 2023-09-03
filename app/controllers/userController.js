@@ -134,7 +134,7 @@ exports.register = (request, response) => {
 exports.getUserById = (request, response) => {
     const id = request.body.id_user
 
-    var query = "SELECT u.*, r.id AS id_role, r.name AS name_role FROM m_user u "+
+    var query = "SELECT u.*, r.name AS name_role FROM m_user u "+
         "JOIN m_role r ON u.id_role=r.id AND r.flag = 1 "+
         "WHERE u.flag = 1 AND u.id = ?"
 
