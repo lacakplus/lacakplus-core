@@ -93,9 +93,21 @@ exports.editLocation = (request, response) => {
     const address = request.body.address
     const updater_id = request.userId
     const type = request.body.type
+    const date = new Date()
 
-    db.pool.query('UPDATE m_location SET name = ?, email = ?, phone = ?, lat = ?, lng = ?, address = ?, type = ?, updater_id = ?, updated_at = ? WHERE id = ?', 
-        [name, email, phone, lat, lng, address, type, updater_id, new Date(), id], (error, results) => {
+    var query = "UPDATE m_location SET updated_at = '"+date+"', updater_id = "+updater_id
+
+    query += (name != null? (", name = '"+name+"'") : "")
+    query += (email != null? (", email = '"+email+"'") : "")
+    query += (phone != null? (", phone = '"+phone+"'") : "")
+    query += (lat != null? (", lat = "+lat) : "")
+    query += (lng != null? (", lng = "+lng) : "")
+    query += (address != null? (", address = '"+address+"'") : "")
+    query += (type != null? (", type = '"+type+"'") : "")
+
+    query += " WHERE id = "+id
+    
+    db.pool.query(query, (error, results) => {
         if (error) {
             response.json({
                 code: 400,
