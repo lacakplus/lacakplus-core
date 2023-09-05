@@ -113,8 +113,9 @@ exports.editVehicle = (request, response) => {
     const bought_year = request.body.bought_year
     const kilometers = request.body.kilometers
     const updater_id = request.userId
+    const date = new Date()
 
-    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1', [no_plate], (error, results) => {
+    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1', [no_plate, id_company], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -130,8 +131,20 @@ exports.editVehicle = (request, response) => {
             });
             return
         }
-        db.pool.query('UPDATE m_vehicle SET id_company = ?, no_plate = ?, name = ?, brand = ?, type = ?, bought_year = ?, kilometers = ?, updater_id = ?, updated_at = ? WHERE id = ?', 
-            [id_company, no_plate, name, brand, type, bought_year, kilometers, updater_id, new Date(), id_vehicle], (error, results) => {
+
+        var query = "UPDATE m_vehicle SET updated_at = '"+date+"', updater_id = "+updater_id
+
+        query += (id_company != null? (", id_company = "+id_company) : "")
+        query += (no_plate != null? (", no_plate = '"+no_plate+"'") : "")
+        query += (name != null? (", name = '"+name+"'") : "")
+        query += (brand != null? (", brand = '"+brand+"'") : "")
+        query += (type != null? (", type = '"+type+"'") : "")
+        query += (bought_year != null? (", bought_year = "+bought_year) : "")
+        query += (kilometers != null? (", kilometers = "+kilometers) : "")
+
+        query += " WHERE id = "+id_vehicle
+
+        db.pool.query(query, (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
