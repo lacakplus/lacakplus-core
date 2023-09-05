@@ -114,7 +114,7 @@ exports.editVehicle = (request, response) => {
     const updater_id = request.userId
     const date = new Date()
 
-    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1', [no_plate, id_company], (error, results) => {
+    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1 AND id_vehicle <> ?', [no_plate, id_company, id_vehicle], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
