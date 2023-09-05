@@ -253,7 +253,7 @@ exports.editUser = (request, response) => {
     const name = request.body.name
     const no_id = request.body.no_id
     const email = request.body.email
-    const password = bcrypt.hashSync(request.body.password, 8)
+    const password = request.body.password
     const phone = request.body.phone
     let date = new Date();
 
@@ -263,7 +263,7 @@ exports.editUser = (request, response) => {
     query += (name != null? (", name = '"+name+"'") : "")
     query += (no_id != null? (", no_id = '"+no_id+"'") : "")
     query += (email != null? (", email = '"+email+"'") : "")
-    query += (password != null? (", password = '"+password+"'") : "")
+    query += (password != null? (", password = '"+bcrypt.hashSync(password, 8)+"'") : "")
     query += (phone != null? (", phone = '"+phone+"'") : "")
 
     query += " WHERE id = "+id_user
