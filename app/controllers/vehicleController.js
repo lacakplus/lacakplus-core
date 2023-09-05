@@ -68,7 +68,6 @@ exports.addVehicle = (request, response) => {
     const bought_year = request.body.bought_year
     const kilometers = request.body.kilometers
     const creator_id = request.userId
-    const updater_id = request.userId
 
     db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1 AND id_company = ?', [no_plate, id_company], (error, results) => {
         if (error) {
@@ -86,7 +85,7 @@ exports.addVehicle = (request, response) => {
             });
             return
         }
-        db.pool.query('INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id, updater_id], (error, results) => {
+        db.pool.query('INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
