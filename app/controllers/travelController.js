@@ -258,7 +258,7 @@ exports.editTravelDetails = (request, response) => {
         let query = "UPDATE tr_travel_dtl"+
             " SET status = (CASE "+queryStatus+" END), arrive_at = (CASE "+queryArrive+" END), depart_at = (CASE "+queryDepart+" END), "+
             " updated_at = '"+(new Date())+"', updater_id = "+userId+
-            " WHERE user_role in ("+listId+")"
+            " WHERE id_travel_dtl in ("+listId+")"
 
         db.pool.query(query, (error, results) => {
             if (error) {
