@@ -235,7 +235,7 @@ exports.editTravelDetails = (request, response) => {
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
 
-    db.pool.query('UPDATE tr_travel SET status = ?, depart_at = ?, arrive_at = ? WHERE id_travel = ?', [status, depart_at, arrive_at, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = ?, depart_at = ?, arrive_at = ? WHERE id = ?', [status, depart_at, arrive_at, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -260,7 +260,7 @@ exports.editTravelDetails = (request, response) => {
         let query = "UPDATE tr_travel_dtl"+
             " SET status = (CASE "+queryStatus+" END), arrive_at = (CASE "+queryArrive+" END), depart_at = (CASE "+queryDepart+" END), "+
             " updated_at = '"+(new Date())+"', updater_id = "+userId+
-            " WHERE id_travel_dtl in ("+listId+")"
+            " WHERE id IN ("+listId+")"
 
         db.pool.query(query, (error, results) => {
             if (error) {
