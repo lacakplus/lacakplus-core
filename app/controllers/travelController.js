@@ -224,6 +224,60 @@ exports.getTravelDetails = (request, response) => {
     })
 }
 
+exports.editTravelDetails = (request, response) => {
+    //Data Travel
+    const id_travel = request.body.id_travel
+    const status = request.body.status
+    const userId = request.userId
+
+    //Data Travel Dtl
+    const travel_dtl = request.body.travel_dtl
+
+    db.pool.query('UPDATE tr_travel SET status = ? WHERE id_travel = ?', [status, id_travel], (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+
+        let queryStatus = ""
+        let queryArrive = ""
+        let queryDepart = ""
+        let listId = ""
+
+        for (let i = 0; i < travel_dtl.length; i++) {
+            queryStatus += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN "+travel_dtl[i].status
+            queryArrive += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].arrive_at+"'"
+            queryDepart += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].depart_at+"'"
+            listId += ((listId == "")? travel_dtl[i].id_travel_dtl : (", "+travel_dtl[i].id_travel_dtl))
+        }
+
+        let query = "UPDATE tr_travel_dtl"+
+            " SET status = (CASE "+queryStatus+" END), arrive_at = (CASE "+queryArrive+" END), depart_at = (CASE "+queryDepart+" END), "+
+            " updated_at = '"+(new Date())+"', updater_id = "+userId+
+            " WHERE user_role in ("+listId+")"
+
+        db.pool.query(query, (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Berhasil edit Perjalanan",
+                data: results
+            });
+        })
+    })
+}
+
 exports.activeTravel = (request, response) => {
     const userId = request.userId
     const id_travel = request.body.id_travel
