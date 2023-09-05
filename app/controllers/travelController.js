@@ -249,17 +249,18 @@ exports.editTravelDetails = (request, response) => {
         let queryArrive = ""
         let queryDepart = ""
         let listId = ""
+        const date = new Date()
 
         for (let i = 0; i < travel_dtl.length; i++) {
-            queryStatus += (travel_dtl[i].status != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN "+travel_dtl[i].status) : ""
-            queryArrive += (travel_dtl[i].arrive_at != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].arrive_at+"'") : ""
-            queryDepart += (travel_dtl[i].depart_at != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].depart_at+"'") : ""
+            queryStatus += (travel_dtl[i].status != null)? (" WHEN id = "+travel_dtl[i].id_travel_dtl+" THEN "+travel_dtl[i].status) : ""
+            queryArrive += (travel_dtl[i].arrive_at != null)? (" WHEN id = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].arrive_at+"'") : ""
+            queryDepart += (travel_dtl[i].depart_at != null)? (" WHEN id = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].depart_at+"'") : ""
             listId += ((listId == "")? travel_dtl[i].id_travel_dtl : (", "+travel_dtl[i].id_travel_dtl))
         }
 
         let query = "UPDATE tr_travel_dtl"+
             " SET status = (CASE "+queryStatus+" END), arrive_at = (CASE "+queryArrive+" END), depart_at = (CASE "+queryDepart+" END), "+
-            " updated_at = '"+(new Date())+"', updater_id = "+userId+
+            " updated_at = '"+date+"', updater_id = "+userId+
             " WHERE id IN ("+listId+")"
 
         db.pool.query(query, (error, results) => {
