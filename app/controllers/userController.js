@@ -257,7 +257,18 @@ exports.editUser = (request, response) => {
     const phone = request.body.phone
     let date = new Date();
 
-    db.pool.query('UPDATE m_user SET id_role = ?, name = ?, no_id = ?, email = ?, password = ?, phone = ?, updater_id = ?, updated_at = ? WHERE id = ?', [id_role, name, no_id, email, password, phone, userId, date, id_user], (error, results) => {
+    var query = "UPDATE m_user SET updated_at = '"+date+"', updater_id = "+userId
+
+    query += (id_role != null? (", id_role = "+id_role) : "")
+    query += (name != null? (", name = '"+name+"'") : "")
+    query += (no_id != null? (", no_id = '"+no_id+"'") : "")
+    query += (email != null? (", email = '"+email+"'") : "")
+    query += (password != null? (", password = '"+password+"'") : "")
+    query += (phone != null? (", phone = '"+phone+"'") : "")
+
+    query += " WHERE id = "+id_user
+
+    db.pool.query(query, (error, results) => {
         if (error) {
             response.json({
                 code: 400,
