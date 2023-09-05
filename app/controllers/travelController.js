@@ -228,12 +228,14 @@ exports.editTravelDetails = (request, response) => {
     //Data Travel
     const id_travel = request.body.id_travel
     const status = request.body.status
+    const depart_at = request.body.depart_at
+    const arrive_at = request.body.arrive_at
     const userId = request.userId
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
 
-    db.pool.query('UPDATE tr_travel SET status = ? WHERE id_travel = ?', [status, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = ?, depart_at = ?, arrive_at = ? WHERE id_travel = ?', [status, depart_at, arrive_at, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -249,9 +251,9 @@ exports.editTravelDetails = (request, response) => {
         let listId = ""
 
         for (let i = 0; i < travel_dtl.length; i++) {
-            queryStatus += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN "+travel_dtl[i].status
-            queryArrive += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].arrive_at+"'"
-            queryDepart += " WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].depart_at+"'"
+            queryStatus += (travel_dtl[i].status != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN "+travel_dtl[i].status) : ""
+            queryArrive += (travel_dtl[i].arrive_at != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].arrive_at+"'") : ""
+            queryDepart += (travel_dtl[i].depart_at != null)? (" WHEN id_travel_dtl = "+travel_dtl[i].id_travel_dtl+" THEN '"+travel_dtl[i].depart_at+"'") : ""
             listId += ((listId == "")? travel_dtl[i].id_travel_dtl : (", "+travel_dtl[i].id_travel_dtl))
         }
 
