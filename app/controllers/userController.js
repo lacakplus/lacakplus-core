@@ -248,27 +248,18 @@ exports.addUser = (request, response) => {
 exports.editUser = (request, response) => {
     //Data User
     const userId = request.userId
+    const id_company = request.body.id_company
     const id_user = request.body.id_user
     const id_role = request.body.id_role
     const name = request.body.name
+    const username = request.body.username
     const no_id = request.body.no_id
     const email = request.body.email
     const password = request.body.password
     const phone = request.body.phone
     let date = new Date();
 
-    var query = "UPDATE m_user SET updated_at = '"+date+"', updater_id = "+userId
-
-    query += (id_role != null? (", id_role = "+id_role) : "")
-    query += (name != null? (", name = '"+name+"'") : "")
-    query += (no_id != null? (", no_id = '"+no_id+"'") : "")
-    query += (email != null? (", email = '"+email+"'") : "")
-    query += (password != null? (", password = '"+bcrypt.hashSync(password, 8)+"'") : "")
-    query += (phone != null? (", phone = '"+phone+"'") : "")
-
-    query += " WHERE id = "+id_user
-
-    db.pool.query(query, (error, results) => {
+    db.pool.query('SELECT * FROM m_user WHERE username = ? AND id_company = ? AND flag = 1 AND id <> ?', [username, id_company, id_user], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -277,10 +268,40 @@ exports.editUser = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Berhasil edit data pengguna"
-        });
+        if (results.length != 0) {
+            response.json({
+                code: 401,
+                message: "Plat nomor sudah pernah digunakan"
+            });
+            return
+        }
+
+        var query = "UPDATE m_user SET updated_at = '"+date+"', updater_id = "+userId
+
+        query += (id_role != null? (", id_role = "+id_role) : "")
+        query += (name != null? (", name = '"+name+"'") : "")
+        query += (username != null? (", username = '"+username+"'") : "")
+        query += (no_id != null? (", no_id = '"+no_id+"'") : "")
+        query += (email != null? (", email = '"+email+"'") : "")
+        query += (password != null? (", password = '"+bcrypt.hashSync(password, 8)+"'") : "")
+        query += (phone != null? (", phone = '"+phone+"'") : "")
+
+        query += " WHERE id = "+id_user
+
+        db.pool.query(query, (error, results) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Berhasil edit data pengguna"
+            });
+        })
     })
 }
 
