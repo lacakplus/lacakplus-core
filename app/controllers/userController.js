@@ -200,7 +200,7 @@ exports.getUsers = (request, response) => {
                 });
                 return
             }
-            let data = response.json({
+            let data = json({
                 users: results,
                 total_data: resultTotal[0].total
             })
