@@ -200,10 +200,10 @@ exports.getUsers = (request, response) => {
                 });
                 return
             }
-            let data = json({
+            let data = {
                 users: results,
                 total_data: resultTotal[0].total
-            })
+            }
             response.json({
                 code: 200,
                 message: "Data pengguna ditemukan",
