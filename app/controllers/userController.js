@@ -204,7 +204,7 @@ exports.getUsers = (request, response) => {
                 code: 200,
                 message: "Data pengguna ditemukan",
                 data: results,
-                total_data: resultTotal
+                total_data: resultTotal[0]
             });
         })
     })
