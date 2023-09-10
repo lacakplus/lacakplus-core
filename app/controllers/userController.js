@@ -191,7 +191,7 @@ exports.getUsers = (request, response) => {
             });
             return
         }
-        db.pool.query("SELECT COUNT(id) as total FROM m_user WHERE id_company = ?", [id_company],(error, resultTotal) => {
+        db.pool.query("SELECT COUNT(id) as total FROM m_user WHERE id_company = ? AND  flag = 1", [id_company],(error, resultTotal) => {
             if (error) {
                 response.json({
                     code: 400,

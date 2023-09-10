@@ -55,11 +55,25 @@ exports.getLocations = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Semua lokasi ditemukan",
-            data: results
-        });
+        db.pool.query("SELECT COUNT(id) as total FROM m_location WHERE id_company = ? AND flag = 1 AND type = ?", [id_company, type],(error, resultTotal) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            let data = {
+                total_data: resultTotal[0].total,
+                users: results
+            }
+            response.json({
+                code: 200,
+                message: "Lokasi ditemukan",
+                data: data
+            });
+        })
     })
 }
 

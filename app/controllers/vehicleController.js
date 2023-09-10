@@ -51,11 +51,25 @@ exports.getVehicles = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Kendaraan ditemukan",
-            data: results
-        });
+        db.pool.query("SELECT COUNT(id) as total FROM m_vehicle WHERE id_company = ? AND flag = 1", [id_company],(error, resultTotal) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            let data = {
+                total_data: resultTotal[0].total,
+                users: results
+            }
+            response.json({
+                code: 200,
+                message: "Kendaraan ditemukan",
+                data: data
+            });
+        })
     })
 }
 
