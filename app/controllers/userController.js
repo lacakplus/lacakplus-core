@@ -191,11 +191,22 @@ exports.getUsers = (request, response) => {
             });
             return
         }
-        response.json({
-            code: 200,
-            message: "Data pengguna ditemukan",
-            data: results
-        });
+        db.pool.query("SELECT COUNT(id) as total FROM m_user", (error, resultTotal) => {
+            if (error) {
+                response.json({
+                    code: 400,
+                    message: error.message,
+                    error: error
+                });
+                return
+            }
+            response.json({
+                code: 200,
+                message: "Data pengguna ditemukan",
+                data: results,
+                total_data: resultTotal
+            });
+        })
     })
 }
 
