@@ -516,3 +516,42 @@ exports.travelComplete = (request, response) => {
         })
     })
 }
+
+exports.getTravelTotal = (request, response) => {
+    const id_company = request.body.id_company   
+    const id_driver = request.userId
+    const status = request.body.status
+    const start_date = request.body.start_date + " 00:00:00"
+    const end_date = request.body.start_date + " 23:59:59"
+
+    var query = "COUNT(flag) AS total FROM tr_travel t "+
+        "JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 "+
+        "WHERE t.flag = 1 AND t.depart_at >= '"+start_date+"' AND t.depart_at <= '"+end_date+"'"
+
+    query += (id_company != null? (" AND t.id_company="+id_company) : "")
+    query += (id_role == 5? (" AND t.id_driver="+id_driver) : "")
+    query += (status != null? (" AND t.status="+status) : "")
+
+    db.pool.query(query, (error, results) => {
+        if (error) {
+            response.json({
+                code: 400,
+                message: error.message,
+                error: error
+            });
+            return
+        }
+        if (results.length == 0) {
+            response.json({
+                code: 401,
+                message: "Data perjalanan tidak ditemukan"
+            });
+            return
+        }
+        response.json({
+            code: 200,
+            message: "Data perjalanan ditemukan",
+            data: results
+        });
+    })
+}
