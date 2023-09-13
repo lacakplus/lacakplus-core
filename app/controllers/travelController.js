@@ -552,8 +552,7 @@ exports.getTravelTotal = (request, response) => {
         response.json({
             code: 200,
             message: "Data perjalanan ditemukan",
-            data: results[0],
-            query: query
+            data: results[0]
         });
     })
 }
