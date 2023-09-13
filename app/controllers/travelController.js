@@ -525,9 +525,9 @@ exports.getTravelTotal = (request, response) => {
     const start_date = request.body.start_date + " 00:00:00"
     const end_date = request.body.start_date + " 23:59:59"
 
-    var query = "COUNT(flag) AS total FROM tr_travel t "+
-        "JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 "+
-        "WHERE t.flag = 1 AND t.depart_at >= '"+start_date+"' AND t.depart_at <= '"+end_date+"'"
+    var query = "SELECT COUNT(t.flag) AS total FROM tr_travel t "+
+        "LEFT JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 "+
+        "WHERE t.flag = 1 AND t.depart_plan_at >= '"+start_date+"' AND t.depart_plan_at <= '"+end_date+"'"
 
     query += (id_company != null? (" AND t.id_company="+id_company) : "")
     query += (id_role == 5? (" AND t.id_driver="+id_driver) : "")
