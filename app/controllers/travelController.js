@@ -518,7 +518,8 @@ exports.travelComplete = (request, response) => {
 }
 
 exports.getTravelTotal = (request, response) => {
-    const id_company = request.body.id_company   
+    const id_company = request.body.id_company
+    const id_role = request.body.id_role
     const id_driver = request.userId
     const status = request.body.status
     const start_date = request.body.start_date + " 00:00:00"
