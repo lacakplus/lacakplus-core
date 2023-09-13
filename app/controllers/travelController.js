@@ -523,7 +523,7 @@ exports.getTravelTotal = (request, response) => {
     const id_driver = request.userId
     const status = request.body.status
     const start_date = request.body.start_date + " 00:00:00"
-    const end_date = request.body.start_date + " 23:59:59"
+    const end_date = request.body.end_date + " 23:59:59"
 
     var query = "SELECT COUNT(t.flag) AS total FROM tr_travel t "+
         "LEFT JOIN m_user u ON t.id_driver = u.id AND u.flag = 1 "+
