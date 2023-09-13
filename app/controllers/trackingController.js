@@ -48,7 +48,7 @@ exports.getTrackings = (request, response) => {
 exports.getPositionVehicles = (request, response) => {
     const id_company = request.body.id_company
 
-    const query = 'SELECT g.name, tr.lat, tr.lng, tr.created_at FROM tr_tracking tr '+
+    const query = 'SELECT g.name, tr.lat, tr.lng, tv.status, tr.created_at FROM tr_tracking tr '+
         'JOIN tr_travel tv ON tv.id = tr.id_travel '+
         'JOIN ( '+
             'SELECT v.id, MAX(tr.created_at) AS max_date, v.name FROM tr_tracking tr '+
