@@ -62,7 +62,7 @@ exports.getVehicles = (request, response) => {
             }
             let data = {
                 total_data: resultTotal[0].total,
-                users: results
+                vehicles: results
             }
             response.json({
                 code: 200,

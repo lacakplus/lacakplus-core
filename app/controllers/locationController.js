@@ -66,7 +66,7 @@ exports.getLocations = (request, response) => {
             }
             let data = {
                 total_data: resultTotal[0].total,
-                users: results
+                locations: results
             }
             response.json({
                 code: 200,
