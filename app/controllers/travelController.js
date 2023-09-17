@@ -147,14 +147,6 @@ exports.getTravels = (request, response) => {
             });
             return
         }
-        if (results.length == 0) {
-            response.json({
-                code: 401,
-                message: "Data perjalanan tidak ditemukan",
-                data: []
-            });
-            return
-        }
         response.json({
             code: 200,
             message: "Data perjalanan ditemukan",
