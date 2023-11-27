@@ -2,14 +2,15 @@ const db = require('../config/dbConfig.js');
 
 exports.addTracking = (request, response) => {
     //Data Tracking
+    const isClearLagTime = request.is_clear_lag
     const userId = request.userId
     const data_tracking = request.body.data_tracking
 
     let values = [];
     for (let i = 0; i < data_tracking.length; i++) {
-        values.push([userId, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng])
+        values.push([userId, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng, data_tracking[i].signal_strength])
     }
-    db.pool.query('INSERT INTO tr_tracking (id_driver, id_travel, lat, lng) VALUES ?', [values], (error, results) => {
+    db.pool.query('INSERT INTO tr_tracking (id_driver, id_travel, lat, lng, signal_strength) VALUES ?', [values], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -18,9 +19,14 @@ exports.addTracking = (request, response) => {
             });
             return
         }
+        if (isClearLagTime) {
+            db.pool.query('UPDATE tr_travel set lag_time = 0 WHERE id_travel = ?', [data_tracking,slice(-1).id_travel], (error, results) => {
+                
+            })
+        }
         response.json({
             code: 200,
-            message: "Data tracking berhasil di tambahkan"
+            message: "Data tracking ditemukan"
         });
     })
 }

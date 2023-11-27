@@ -1,7 +1,12 @@
 let express = require('express');
 let router = express.Router();
 let auth = require("../middleware/auth.js");
-// const upload = require("../middleware/upload.js");
+let upload = require("../middleware/upload.js");
+
+//  uploadController
+const uploadController = require("../controllers/uploadController.js");
+router.post("/api/upload", auth.verifyToken, upload.single("file"), uploadController.upload);
+
  
 //  userController
 const user = require('../controllers/userController.js');
