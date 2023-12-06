@@ -20,9 +20,9 @@ exports.addAtendance = (request, response) => {
         }
         var message = ""
         if (status == 0) {
-            message = "Berhasil Clock In"
+            message = "Berhasil Clock In" + userId
         } else if (status == 1) {
-            message = "Berhasil Clock Out"
+            message = "Berhasil Clock Out" + userId
         }
         response.status(statusCode.success).json({
             code: statusCode.success,
