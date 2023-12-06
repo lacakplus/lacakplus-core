@@ -10,20 +10,24 @@ exports.addAtendance = (request, response) => {
     const phone = request.body.phone
     const location = request.body.location
 
-    db.pool.query('INSERT INTO tr_attendance (id_company, attendance_at, status, photo, phone, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, attendance_at, status, photo, phone, location, userId], (error, results) => {
+    db.pool.query('INSERT INTO tr_attendance (id_company, attendance_at, status, photo, phone, location, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?)', [id_company, attendance_at, status, photo, phone, location, userId], (error, results) => {
         if (error) {
-            response.statusCode = statusCode.bad_request
-            response.json({
+            response.status(statusCode.bad_request).json({
                 code: statusCode.bad_request,
                 message: error.message,
                 error: error
             });
             return
         }
-        response.statusCode = statusCode.success
-        response.json({
+        var message = ""
+        if (status == 0) {
+            message = "Berhasil Clock In"
+        } else if (status == 1) {
+            message = "Berhasil Clock Out"
+        }
+        response.status(statusCode.success).json({
             code: statusCode.success,
-            message: "Data tracking ditemukan"
+            message: message
         });
     })
 }
