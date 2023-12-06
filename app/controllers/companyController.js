@@ -1,25 +1,22 @@
 const db = require('../config/dbConfig.js');
+const statusCode = require('../config/statusCode.js');
+const baseError = require("../middleware/error.js");
 
 exports.getCompanies = (request, response) => {
-    db.pool.query('SELECT * FROM m_company WHERE flag = 1', (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+    const queryString = "SELECT * FROM m_company WHERE flag = 1"
+    db.pool.query(queryString, (error, results) => {
+        baseError.error(error, response)
+
         if (results.length == 0) {
-            response.json({
-                code: 401,
-                message: "Company tidak ditemukan"
+            return response.status(statusCode.empty_data).send({
+                code: statusCode.empty_data,
+                message: "Perusahaan tidak ditemukan"
             });
-            return
         }
-        response.json({
-            code: 200,
-            message: "Company ditemukan",
+
+        response.status(statusCode.success).send({
+            code: statusCode.success,
+            message: "Perusahaan ditemukan",
             data: results
         });
     })
@@ -39,13 +36,13 @@ exports.getCompanyById = (request, response) => {
         if (results.length == 0) {
             response.json({
                 code: 401,
-                message: "Company tidak ditemukan"
+                message: "Perusahaan tidak ditemukan"
             });
             return
         }
         response.json({
             code: 200,
-            message: "Company ditemukan",
+            message: "Perusahaan ditemukan",
             data: results
         });
     })

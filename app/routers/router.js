@@ -1,7 +1,7 @@
-let express = require('express');
-let router = express.Router();
-let auth = require("../middleware/auth.js");
-let upload = require("../middleware/upload.js");
+const express = require('express');
+const auth = require("../middleware/auth.js");
+const upload = require("../middleware/upload.js");
+const router = express.Router();
 
 //  uploadController
 const uploadController = require("../controllers/uploadController.js");

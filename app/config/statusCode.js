@@ -1,5 +1,6 @@
 module.exports = {
   success: "200",
+  empty_data: "204",
   bad_request: "400",
   unauthorized: "401",
   forbidden: "403",
