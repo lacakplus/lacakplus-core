@@ -2,7 +2,7 @@ const db = require('../config/dbConfig.js');
 
 exports.addTracking = (request, response) => {
     //Data Tracking
-    const isClearLagTime = request.is_clear_lag
+    // const isClearLagTime = request.is_clear_lag
     const userId = request.userId
     const data_tracking = request.body.data_tracking
 
@@ -19,11 +19,11 @@ exports.addTracking = (request, response) => {
             });
             return
         }
-        if (isClearLagTime) {
-            db.pool.query('UPDATE tr_travel set lag_time = 0 WHERE id_travel = ?', [data_tracking,slice(-1).id_travel], (error, results) => {
+        // if (isClearLagTime) {
+        //     db.pool.query('UPDATE tr_travel set lag_time = 0 WHERE id_travel = ?', [data_tracking,slice(-1).id_travel], (error, results) => {
                 
-            })
-        }
+        //     })
+        // }
         response.json({
             code: 200,
             message: "Data tracking ditemukan"
