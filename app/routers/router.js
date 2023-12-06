@@ -19,6 +19,11 @@ router.post('/api/user/delete', auth.verifyToken, user.deleteUser);
 router.post('/api/login', user.login);
 router.post('/api/register', user.register);
 
+
+//  attendanceController
+const attendance = require('../controllers/attendanceController.js');
+router.post('/api/attendance/add', attendance.addAtendance);
+
 // const version = require('../controllers/versionController.js');
 // router.post('/api/version/apps', version.getVersion);
 
