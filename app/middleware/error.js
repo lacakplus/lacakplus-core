@@ -1,6 +1,6 @@
 const statusCode = require('../config/statusCode.js');
 
-exports.error = (error, response) => {
+exports.handleError = (error, response) => {
     if (error) {
         return response.status(statusCode.bad_request).send({
             code: statusCode.bad_request,
