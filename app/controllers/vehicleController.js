@@ -81,7 +81,7 @@ exports.addVehicle = (request, response) => {
     const type = request.body.type
     const bought_year = request.body.bought_year
     const kilometers = request.body.kilometers
-    const creator_id = request.userId
+    const creator_id = request.user_id
 
     db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1 AND id_company = ?', [no_plate, id_company], (error, results) => {
         if (error) {
@@ -125,7 +125,7 @@ exports.editVehicle = (request, response) => {
     const type = request.body.type
     const bought_year = request.body.bought_year
     const kilometers = request.body.kilometers
-    const updater_id = request.userId
+    const updater_id = request.user_id
     const date = new Date()
 
     db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1 AND id <> ?', [no_plate, id_company, id_vehicle], (error, results) => {
@@ -176,7 +176,7 @@ exports.editVehicle = (request, response) => {
 
 exports.deleteVehicle = (request, response) => {
     const id_vehicle = request.body.id_vehicle
-    const updater_id = request.userId
+    const updater_id = request.user_id
     
     db.pool.query('UPDATE m_vehicle SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id_vehicle], (error, results) => {
         if (error) {

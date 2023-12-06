@@ -3,12 +3,12 @@ const db = require('../config/dbConfig.js');
 exports.addTracking = (request, response) => {
     //Data Tracking
     // const isClearLagTime = request.is_clear_lag
-    const userId = request.userId
+    const user_id = request.user_id
     const data_tracking = request.body.data_tracking
 
     let values = [];
     for (let i = 0; i < data_tracking.length; i++) {
-        values.push([userId, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng, data_tracking[i].signal_strength])
+        values.push([user_id, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng, data_tracking[i].signal_strength])
     }
     db.pool.query('INSERT INTO tr_tracking (id_driver, id_travel, lat, lng, signal_strength) VALUES ?', [values], (error, results) => {
         if (error) {

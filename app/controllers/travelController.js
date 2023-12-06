@@ -7,7 +7,7 @@ exports.addTravel = (request, response) => {
     const id_driver = request.body.id_driver
     const depart_plan_at = request.body.depart_plan_at
     const arrive_plan_at = request.body.arrive_plan_at
-    const userId = request.userId
+    const user_id = request.user_id
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
@@ -16,7 +16,7 @@ exports.addTravel = (request, response) => {
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
     let year = ("" + date_ob.getFullYear()).slice(-2);
 
-    db.pool.query('INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, userId], (error, results) => {
+    db.pool.query('INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, user_id], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -38,7 +38,7 @@ exports.addTravel = (request, response) => {
             }
             let values = [];
             for (let i = 0; i < travel_dtl.length; i++) {
-                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, userId])
+                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, user_id])
             }
             db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
                 if (error) {
@@ -66,12 +66,12 @@ exports.editTravel = (request, response) => {
     const id_driver = request.body.id_driver
     const depart_plan_at = request.body.depart_plan_at
     const arrive_plan_at = request.body.arrive_plan_at
-    const userId = request.userId
+    const user_id = request.user_id
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
 
-    db.pool.query('UPDATE tr_travel SET id_vehicle = ?, id_driver = ?, depart_plan_at = ?, arrive_plan_at = ?, updater_id = ? WHERE id_travel = ?', [id_vehicle, id_driver, depart_plan_at, arrive_plan_at, userId, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET id_vehicle = ?, id_driver = ?, depart_plan_at = ?, arrive_plan_at = ?, updater_id = ? WHERE id_travel = ?', [id_vehicle, id_driver, depart_plan_at, arrive_plan_at, user_id, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -91,7 +91,7 @@ exports.editTravel = (request, response) => {
             }
             let values = [];
             for (let i = 0; i < travel_dtl.length; i++) {
-                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, userId, userId])
+                values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, user_id, user_id])
             }
             db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id, updater_id) VALUES ?', [values], (error, results) => {
                 if (error) {
@@ -113,7 +113,7 @@ exports.editTravel = (request, response) => {
 }
 
 exports.getTravels = (request, response) => {
-    const id_user = request.userId
+    const id_user = request.user_id
     const id_role = request.body.id_role
     const status = request.body.status
     const id_company = request.body.id_company
@@ -223,7 +223,7 @@ exports.editTravelDetails = (request, response) => {
     const status = request.body.status
     const depart_at = request.body.depart_at
     const arrive_at = request.body.arrive_at
-    const userId = request.userId
+    const user_id = request.user_id
 
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
@@ -253,7 +253,7 @@ exports.editTravelDetails = (request, response) => {
 
         let query = "UPDATE tr_travel_dtl"+
             " SET status = (CASE "+queryStatus+" END), arrive_at = (CASE "+queryArrive+" END), depart_at = (CASE "+queryDepart+" END), "+
-            " updated_at = '"+date+"', updater_id = "+userId+
+            " updated_at = '"+date+"', updater_id = "+user_id+
             " WHERE id IN ("+listId+")"
 
         db.pool.query(query, (error, results) => {
@@ -275,12 +275,12 @@ exports.editTravelDetails = (request, response) => {
 }
 
 exports.activeTravel = (request, response) => {
-    const userId = request.userId
+    const user_id = request.user_id
     const id_travel = request.body.id_travel
     const id_travel_dtl = request.body.id_travel_dtl
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [user_id, date, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -289,7 +289,7 @@ exports.activeTravel = (request, response) => {
             });
             return
         }
-        db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_travel_dtl], (error, results) => {
+        db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [user_id, date, id_travel_dtl], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -308,14 +308,14 @@ exports.activeTravel = (request, response) => {
 
 exports.travelStart = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_travel = request.body.id_travel
     const id_travel_dtl_now = request.body.id_travel_dtl_now
     const id_travel_dtl_next = request.body.id_travel_dtl_next
     const depart_at = request.body.depart_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel SET status = 2, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [userId, date, date, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = 2, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [user_id, date, date, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -324,7 +324,7 @@ exports.travelStart = (request, response) => {
             });
             return
         }
-        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [userId, date, date, id_travel_dtl_now], (error, results) => {
+        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, depart_at = ? WHERE id = ?', [user_id, date, date, id_travel_dtl_now], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -333,7 +333,7 @@ exports.travelStart = (request, response) => {
                 });
                 return
             }
-            db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_travel_dtl_next], (error, results) => {
+            db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [user_id, date, id_travel_dtl_next], (error, results) => {
                 if (error) {
                     response.json({
                         code: 400,
@@ -353,13 +353,13 @@ exports.travelStart = (request, response) => {
 
 exports.travelArriveCustomer = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_travel = request.body.id_travel
     const id_travel_dtl = request.body.id_travel_dtl
     const arrive_at = request.body.arrive_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel_dtl SET  status = 2, arrive_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [date, userId, date, id_travel_dtl], (error, results) => {
+    db.pool.query('UPDATE tr_travel_dtl SET  status = 2, arrive_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [date, user_id, date, id_travel_dtl], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -399,14 +399,14 @@ exports.travelArriveCustomer = (request, response) => {
 
 exports.travelDepartCustomer = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_travel = request.body.id_travel
     const id_travel_dtl_now = request.body.id_travel_dtl_now
     const id_travel_dtl_next = request.body.id_travel_dtl_next
     const depart_at = request.body.depart_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel_dtl SET status = 3, depart_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [date, userId, date, id_travel_dtl_now], (error, results) => {
+    db.pool.query('UPDATE tr_travel_dtl SET status = 3, depart_at = ?, updater_id = ?, updated_at = ? WHERE id = ?', [date, user_id, date, id_travel_dtl_now], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -415,7 +415,7 @@ exports.travelDepartCustomer = (request, response) => {
             });
             return
         }
-        db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_travel_dtl_next], (error, results) => {
+        db.pool.query('UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?', [user_id, date, id_travel_dtl_next], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -456,13 +456,13 @@ exports.travelDepartCustomer = (request, response) => {
 
 exports.travelComplete = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_travel = request.body.id_travel
     const id_travel_dtl = request.body.id_travel_dtl
     const arrive_at = request.body.arrive_at
     let date = new Date();
 
-    db.pool.query('UPDATE tr_travel SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [userId, date, date, id_travel], (error, results) => {
+    db.pool.query('UPDATE tr_travel SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [user_id, date, date, id_travel], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -471,7 +471,7 @@ exports.travelComplete = (request, response) => {
             });
             return
         }
-        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [userId, date, date, id_travel_dtl], (error, results) => {
+        db.pool.query('UPDATE tr_travel_dtl SET status = 3, updater_id = ?, updated_at = ?, arrive_at = ? WHERE id = ?', [user_id, date, date, id_travel_dtl], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -513,7 +513,7 @@ exports.travelComplete = (request, response) => {
 exports.getTravelTotal = (request, response) => {
     const id_company = request.body.id_company
     const id_role = request.body.id_role
-    const id_driver = request.userId
+    const id_driver = request.user_id
     const status = request.body.status
     const start_date = request.body.start_date + " 00:00:00"
     const end_date = request.body.end_date + " 23:59:59"

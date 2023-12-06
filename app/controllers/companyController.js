@@ -60,7 +60,7 @@ exports.editCompany = (request, response) => {
     const lat = request.body.lat
     const lng = request.body.lng
     const address = request.body.address
-    const updater_id = request.userId
+    const updater_id = request.user_id
 
     db.pool.query('UPDATE m_company SET name = ?, phone = ?, email = ?, no_id = ?, lat = ?, lng = ?, address = ?, updater_id = ?, updated_at = ? WHERE id = ? AND flag = 1', 
         [name, phone, email, no_id, lat, lng, address, updater_id, new Date(), id_company], (error, results) => {
@@ -81,7 +81,7 @@ exports.editCompany = (request, response) => {
 
 exports.deleteCompany = (request, response) => {
     const id_company = request.body.id_company
-    const updater_id = request.userId
+    const updater_id = request.user_id
     
     db.pool.query('UPDATE m_company SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id_company], (error, results) => {
         if (error) {

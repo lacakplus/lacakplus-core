@@ -19,7 +19,6 @@ exports.verifyToken = (request, res, next) => {
             error: err
         });
       }
-      request.userId = decoded.id;
       request.user_id = decoded.id;
       next();
     });

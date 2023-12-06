@@ -215,7 +215,7 @@ exports.getUsers = (request, response) => {
 
 exports.addUser = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_role = request.body.id_role
     const id_company = request.body.id_company
     const name = request.body.name
@@ -242,7 +242,7 @@ exports.addUser = (request, response) => {
             return
         }
 
-        db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone, userId], (error, results) => {
+        db.pool.query('INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, id_role, name, no_id, email, username, password, phone, user_id], (error, results) => {
             if (error) {
                 response.json({
                     code: 400,
@@ -261,7 +261,7 @@ exports.addUser = (request, response) => {
 
 exports.editUser = (request, response) => {
     //Data User
-    const userId = request.userId
+    const user_id = request.user_id
     const id_company = request.body.id_company
     const id_user = request.body.id_user
     const id_role = request.body.id_role
@@ -290,7 +290,7 @@ exports.editUser = (request, response) => {
             return
         }
 
-        var query = "UPDATE m_user SET updated_at = '"+date+"', updater_id = "+userId
+        var query = "UPDATE m_user SET updated_at = '"+date+"', updater_id = "+user_id
 
         query += (id_role != null? (", id_role = "+id_role) : "")
         query += (name != null? (", name = '"+name+"'") : "")
@@ -322,10 +322,10 @@ exports.editUser = (request, response) => {
 exports.deleteUser = (request, response) => {
     //Data User
     const id_user = request.body.id_user
-    const userId = request.userId
+    const user_id = request.user_id
     let date = new Date();
 
-    db.pool.query('UPDATE m_user SET flag = 0, updater_id = ?, updated_at = ? WHERE id = ?', [userId, date, id_user], (error, results) => {
+    db.pool.query('UPDATE m_user SET flag = 0, updater_id = ?, updated_at = ? WHERE id = ?', [user_id, date, id_user], (error, results) => {
         if (error) {
             response.json({
                 code: 400,
