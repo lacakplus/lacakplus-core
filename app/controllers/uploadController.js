@@ -1,6 +1,6 @@
 const fs = require("fs");
 const db = require('../config/dbConfig.js');
-const { use } = require('../routers/router.js').default;
+const { use } = require('../routers/router.js');
 const File = db.File;
 exports.upload = async (req, res) => {
     try{
