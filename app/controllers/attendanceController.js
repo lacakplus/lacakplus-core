@@ -10,7 +10,7 @@ exports.addAtendance = (request, response) => {
     const location = request.body.location
 
     const queryString = 'INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)'
-    db.pool.query(queryString, [id_company, attendance_at, status, photo, location, userId], (error, results) => {
+    db.pool.query(queryString, [id_company, attendance_at, status, photo, location, user_id], (error, results) => {
         if (error) {
             return response.status(statusCode.bad_request).send({
                 code: statusCode.bad_request,
