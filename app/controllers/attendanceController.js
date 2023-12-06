@@ -9,22 +9,18 @@ exports.addAtendance = (request, response) => {
     const photo = request.body.photo
     const location = request.body.location
 
-    db.pool.query('INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)', [id_company, attendance_at, status, photo, location, userId], (error, results) => {
+    const queryString = 'INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)'
+    db.pool.query(queryString, [id_company, attendance_at, status, photo, location, userId], (error, results) => {
         if (error) {
-            response.status(statusCode.bad_request).json({
+            return response.status(statusCode.bad_request).send({
                 code: statusCode.bad_request,
                 message: error.message,
                 error: error
             });
-            return
         }
-        var message = ""
-        if (status == 0) {
-            message = "Berhasil Clock In" + userId
-        } else if (status == 1) {
-            message = "Berhasil Clock Out" + userId
-        }
-        response.status(statusCode.success).json({
+
+        let message = (status == 0) ? "Berhasil Clock In" : "Berhasil Clock Out"
+        response.status(statusCode.success).send({
             code: statusCode.success,
             message: message
         });
