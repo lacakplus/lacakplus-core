@@ -33,17 +33,18 @@ exports.getLocations = (request, response) => {
     let page = (request.body.page > 0) ? (request.body.page - 1) * limit : 0
 
     var queryString = "SELECT id, name, type, phone, lat, lng, address FROM m_location WHERE flag = 1"
-    queryString += (search != null? (" AND name like '%"+ search +"%'") : "")
-    queryString += (id_company != null? (" AND id_company="+id_company) : "")
-    queryString += (type != null? (" AND type="+type) : "")
+    queryString += (search != null ? (" AND name like '%"+ search +"%'") : "")
+    queryString += (id_company != null ? (" AND id_company="+id_company) : "")
+    queryString += (type != null ? (" AND type="+type) : "")
     queryString += " ORDER BY type"
-    queryString += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))
+    queryString += ((request.body.limit == null && request.body.page == null) ? "" : (" LIMIT "+limit+" OFFSET "+page))
 
     db.pool.query(queryString, (error, results) => {
         baseError.handleError(error, response)
         
         db.pool.query("SELECT COUNT(id) as total FROM m_location WHERE id_company = ? AND flag = 1 AND type = ?", [id_company, type],(error, resultTotal) => {
             baseError.handleError(error, response)
+
             let data = {
                 total_data: resultTotal[0].total,
                 locations: results
@@ -63,6 +64,13 @@ exports.getLocationById = (request, response) => {
     const queryString = "SELECT * FROM m_location WHERE id = ? AND flag = 1"
     db.pool.query(queryString, [id], (error, results) => {
         baseError.handleError(error, response)
+
+        if (results.length == 0) {
+            return response.status(statusCode.empty_data).send({
+                code: statusCode.empty_data,
+                message: "Lokasi tidak ditemukan"
+            });
+        }
 
         response.status(statusCode.success).send({
             code: statusCode.success,
@@ -85,13 +93,13 @@ exports.editLocation = (request, response) => {
     const date = new Date()
 
     var queryString = "UPDATE m_location SET updated_at = '"+date+"', updater_id = "+updater_id
-    queryString += (name != null? (", name = '"+name+"'") : "")
-    queryString += (email != null? (", email = '"+email+"'") : "")
-    queryString += (phone != null? (", phone = '"+phone+"'") : "")
-    queryString += (lat != null? (", lat = "+lat) : "")
-    queryString += (lng != null? (", lng = "+lng) : "")
-    queryString += (address != null? (", address = '"+address+"'") : "")
-    queryString += (type != null? (", type = '"+type+"'") : "")
+    queryString += (name != null ? (", name = '"+name+"'") : "")
+    queryString += (email != null ? (", email = '"+email+"'") : "")
+    queryString += (phone != null ? (", phone = '"+phone+"'") : "")
+    queryString += (lat != null ? (", lat = "+lat) : "")
+    queryString += (lng != null ? (", lng = "+lng) : "")
+    queryString += (address != null ? (", address = '"+address+"'") : "")
+    queryString += (type != null ? (", type = '"+type+"'") : "")
     queryString += " WHERE id = "+id
     
     db.pool.query(query, (error, results) => {

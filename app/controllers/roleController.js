@@ -1,17 +1,14 @@
 const db = require('../config/dbConfig.js');
+const statusCode = require('../config/statusCode.js');
+const baseError = require("../middleware/error.js");
 
 exports.getRoles = (request, response) => {
-    db.pool.query('SELECT * FROM m_role', (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
+    const queryString = "SELECT * FROM m_role"
+    db.pool.query(queryString, (error, results) => {
+        baseError.handleError(error, response)
+        
+        response.status(statusCode.success).send({
+            code: statusCode.success,
             message: "Role ditemukan",
             data: results
         });
