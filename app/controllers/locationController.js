@@ -1,4 +1,6 @@
 const db = require('../config/dbConfig.js');
+const statusCode = require('../config/statusCode.js');
+const baseError = require("../middleware/error.js");
 
 exports.addLocation = (request, response) => {
     const user_id = request.user_id
@@ -11,18 +13,13 @@ exports.addLocation = (request, response) => {
     const address = request.body.address
     const type = request.body.type
 
-    db.pool.query('INSERT INTO m_location (id_company, name, email, phone, lat, lng, address, type, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, name, email, phone, lat, lng, address, type, user_id], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
-            message: "Berhasil menambahkan Lokasi"
+    const queryString = "INSERT INTO m_location (id_company, name, email, phone, lat, lng, address, type, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    db.pool.query(queryString, [id_company, name, email, phone, lat, lng, address, type, user_id], (error, results) => {
+        baseError.handleError(error, response)
+        
+        response.status(statusCode.success).send({
+            code: statusCode.success,
+            message: "Berhasil Menambahkan Lokasi"
         });
     })
 }
@@ -33,43 +30,26 @@ exports.getLocations = (request, response) => {
     const search = request.body.search
     const limit = request.body.limit || 10
 
-    var page = 0
-    if (request.body.page > 0) {
-        page = (request.body.page - 1) * limit
-    }
+    let page = (request.body.page > 0) ? (request.body.page - 1) * limit : 0
 
-    var query = "SELECT id, name, type, phone, lat, lng, address FROM m_location WHERE flag = 1"
+    var queryString = "SELECT id, name, type, phone, lat, lng, address FROM m_location WHERE flag = 1"
+    queryString += (search != null? (" AND name like '%"+ search +"%'") : "")
+    queryString += (id_company != null? (" AND id_company="+id_company) : "")
+    queryString += (type != null? (" AND type="+type) : "")
+    queryString += " ORDER BY type"
+    queryString += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))
 
-    query += (search != null? (" AND name like '%"+ search +"%'") : "")
-    query += (id_company != null? (" AND id_company="+id_company) : "")
-    query += (type != null? (" AND type="+type) : "")
-    query += " ORDER BY type"
-    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page))
-
-    db.pool.query(query, (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+    db.pool.query(queryString, (error, results) => {
+        baseError.handleError(error, response)
+        
         db.pool.query("SELECT COUNT(id) as total FROM m_location WHERE id_company = ? AND flag = 1 AND type = ?", [id_company, type],(error, resultTotal) => {
-            if (error) {
-                response.json({
-                    code: 400,
-                    message: error.message,
-                    error: error
-                });
-                return
-            }
+            baseError.handleError(error, response)
             let data = {
                 total_data: resultTotal[0].total,
                 locations: results
             }
-            response.json({
-                code: 200,
+            response.status(statusCode.success).send({
+                code: statusCode.success,
                 message: "Lokasi ditemukan",
                 data: data
             });
@@ -80,17 +60,12 @@ exports.getLocations = (request, response) => {
 exports.getLocationById = (request, response) => {
     const id = request.body.id_location
 
-    db.pool.query('SELECT * FROM m_location WHERE id = ? AND flag = 1', [id], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
+    const queryString = "SELECT * FROM m_location WHERE id = ? AND flag = 1"
+    db.pool.query(queryString, [id], (error, results) => {
+        baseError.handleError(error, response)
+
+        response.status(statusCode.success).send({
+            code: statusCode.success,
             message: "Lokasi ditemukan",
             data: results[0]
         });
@@ -109,50 +84,37 @@ exports.editLocation = (request, response) => {
     const type = request.body.type
     const date = new Date()
 
-    var query = "UPDATE m_location SET updated_at = '"+date+"', updater_id = "+updater_id
-
-    query += (name != null? (", name = '"+name+"'") : "")
-    query += (email != null? (", email = '"+email+"'") : "")
-    query += (phone != null? (", phone = '"+phone+"'") : "")
-    query += (lat != null? (", lat = "+lat) : "")
-    query += (lng != null? (", lng = "+lng) : "")
-    query += (address != null? (", address = '"+address+"'") : "")
-    query += (type != null? (", type = '"+type+"'") : "")
-
-    query += " WHERE id = "+id
+    var queryString = "UPDATE m_location SET updated_at = '"+date+"', updater_id = "+updater_id
+    queryString += (name != null? (", name = '"+name+"'") : "")
+    queryString += (email != null? (", email = '"+email+"'") : "")
+    queryString += (phone != null? (", phone = '"+phone+"'") : "")
+    queryString += (lat != null? (", lat = "+lat) : "")
+    queryString += (lng != null? (", lng = "+lng) : "")
+    queryString += (address != null? (", address = '"+address+"'") : "")
+    queryString += (type != null? (", type = '"+type+"'") : "")
+    queryString += " WHERE id = "+id
     
     db.pool.query(query, (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
-            message: "Berhasil edit Lokasi"
+        baseError.handleError(error, response)
+
+        response.status(statusCode.success).send({
+            code: statusCode.success,
+            message: "Berhasil Edit Lokasi"
         });
     })
 }
 
 exports.deleteLocation = (request, response) => {
-    const id = request.body.id_location
     const updater_id = request.user_id
+    const id = request.body.id_location
     
-    db.pool.query('UPDATE m_location SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
-            message: "Berhasil hapus Lokasi"
+    const queryString = "UPDATE m_location SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
+    db.pool.query(queryString, [updater_id, new Date(), id], (error, results) => {
+        baseError.handleError(error, response)
+        
+        response.status(statusCode.success).send({
+            code: statusCode.success,
+            message: "Berhasil Hapus Lokasi"
         });
     })
 }
