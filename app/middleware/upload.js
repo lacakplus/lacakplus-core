@@ -9,7 +9,9 @@ var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
       cb(null, "./resource/image");
-    }else{
+    } else if (file.mimetype.startsWith("video")) {
+      cb(null, "./resource/video");
+    } else {
       cb(null, "./resource/file");
     }
   },

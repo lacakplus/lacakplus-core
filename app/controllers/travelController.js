@@ -18,7 +18,7 @@ exports.addTravel = (request, response) => {
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
     let year = ("" + date_ob.getFullYear()).slice(-2);
 
-    const queryString = "INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)"
+    let queryString = "INSERT INTO tr_travel (id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, creator_id) VALUES (?, ?, ?, ?, ?, ?)"
     db.pool.query(queryString, [id_company, id_vehicle, id_driver, depart_plan_at, arrive_plan_at, user_id], (error, results) => {
         baseError.handleError(error, response)
 
@@ -31,7 +31,7 @@ exports.addTravel = (request, response) => {
             for (let i = 0; i < travel_dtl.length; i++) {
                 values.push([id_travel, travel_dtl[i].sequence, travel_dtl[i].id_location, user_id])
             }
-            db.pool.query('INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?', [values], (error, results) => {
+            db.pool.query("INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?", [values], (error, results) => {
                 baseError.handleError(error, response)
 
                 response.status(statusCode.success).send({
@@ -56,7 +56,7 @@ exports.editTravel = (request, response) => {
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
 
-    const queryString = "UPDATE tr_travel SET id_vehicle = ?, id_driver = ?, depart_plan_at = ?, arrive_plan_at = ?, updater_id = ? WHERE id_travel = ?"
+    let queryString = "UPDATE tr_travel SET id_vehicle = ?, id_driver = ?, depart_plan_at = ?, arrive_plan_at = ?, updater_id = ? WHERE id_travel = ?"
     db.pool.query(queryString, [id_vehicle, id_driver, depart_plan_at, arrive_plan_at, user_id, id_travel], (error, results) => {
         baseError.handleError(error, response)
 
@@ -142,7 +142,7 @@ exports.getTravelById = (request, response) => {
 
 exports.getTravelDetails = (request, response) => {
     const id_travel = request.body.id_travel
-    const queryString = "SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td "+
+    let queryString = "SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td "+
         "JOIN m_location l ON td.id_location = l.id AND l.flag = 1 "+
         "WHERE td.id_travel = ? AND td.flag = 1"
 
@@ -175,7 +175,7 @@ exports.editTravelDetails = (request, response) => {
     //Data Travel Dtl
     const travel_dtl = request.body.travel_dtl
 
-    const queryString = "UPDATE tr_travel SET status = ?, depart_at = ?, arrive_at = ? WHERE id = ?"
+    let queryString = "UPDATE tr_travel SET status = ?, depart_at = ?, arrive_at = ? WHERE id = ?"
     db.pool.query(queryString, [status, depart_at, arrive_at, id_travel], (error, results) => {
         baseError.handleError(error, response)
 
@@ -267,9 +267,9 @@ exports.travelArriveCustomer = (request, response) => {
     db.pool.query("UPDATE tr_travel_dtl SET  status = 2, arrive_at = ?, updater_id = ?, updated_at = ? WHERE id = ?", [date, user_id, date, id_travel_dtl], (error, results) => {
         baseError.handleError(error, response)
 
-        const query = 'SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td '+
-            'JOIN m_location l ON td.id_location = l.id AND l.flag = 1 '+
-            'WHERE td.id_travel = ? AND td.flag = 1'
+        const query = "SELECT td.id, td.id_travel, td.sequence, td.id_location, td.arrive_at, td.depart_at, td.status, td.created_at, l.name AS name_location, l.lat, l.lng, l.address, l.phone FROM tr_travel_dtl td "+
+            "JOIN m_location l ON td.id_location = l.id AND l.flag = 1 "+
+            "WHERE td.id_travel = ? AND td.flag = 1"
 
         db.pool.query(query, [id_travel], (error, results) => {
             baseError.handleError(error, response)
@@ -392,7 +392,7 @@ exports.getTravelTotal = (request, response) => {
                 message: "Data perjalanan tidak ditemukan"
             });
         }
-        
+
         response.status(statusCode.success).send({
             code: statusCode.success,
             message: "Data perjalanan ditemukan",

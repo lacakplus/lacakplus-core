@@ -10,7 +10,7 @@ exports.addAtendance = (request, response) => {
     const photo = request.body.photo
     const location = request.body.location
 
-    const queryString = "INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)"
+    let queryString = "INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)"
     db.pool.query(queryString, [id_company, attendance_at, status, photo, location, user_id], (error, results) => {
         baseError.handleError(error, response)
 

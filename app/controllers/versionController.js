@@ -2,7 +2,7 @@ const db = require('../config/dbConfig.js');
 
 exports.getVersion = (request, response) => {
     const reqVersionSplit = request.body.version.split(".");
-    db.pool.query('SELECT * FROM m_version', (error, results) => {
+    db.pool.query("SELECT * FROM m_version", (error, results) => {
         if (error) {
             response.json({
                 code: 400,
@@ -29,8 +29,8 @@ exports.getVersion = (request, response) => {
             update_apps: updateApps,
             force_update: results[0].force_update
         };
-        response.json({
-            code: 200,
+        response.status(statusCode.success).send({
+            code: statusCode.success,
             message: message,
             data: data
         });

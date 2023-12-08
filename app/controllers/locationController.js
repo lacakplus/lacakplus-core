@@ -13,7 +13,7 @@ exports.addLocation = (request, response) => {
     const address = request.body.address
     const type = request.body.type
 
-    const queryString = "INSERT INTO m_location (id_company, name, email, phone, lat, lng, address, type, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    let queryString = "INSERT INTO m_location (id_company, name, email, phone, lat, lng, address, type, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
     db.pool.query(queryString, [id_company, name, email, phone, lat, lng, address, type, user_id], (error, results) => {
         baseError.handleError(error, response)
         
@@ -61,7 +61,7 @@ exports.getLocations = (request, response) => {
 exports.getLocationById = (request, response) => {
     const id = request.body.id_location
 
-    const queryString = "SELECT * FROM m_location WHERE id = ? AND flag = 1"
+    let queryString = "SELECT * FROM m_location WHERE id = ? AND flag = 1"
     db.pool.query(queryString, [id], (error, results) => {
         baseError.handleError(error, response)
 
@@ -116,7 +116,7 @@ exports.deleteLocation = (request, response) => {
     const updater_id = request.user_id
     const id = request.body.id_location
     
-    const queryString = "UPDATE m_location SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
+    let queryString = "UPDATE m_location SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
     db.pool.query(queryString, [updater_id, new Date(), id], (error, results) => {
         baseError.handleError(error, response)
         

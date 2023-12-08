@@ -3,7 +3,7 @@ const statusCode = require('../config/statusCode.js');
 const baseError = require("../middleware/error.js");
 
 exports.getCompanies = (request, response) => {
-    const queryString = "SELECT * FROM m_company WHERE flag = 1"
+    let queryString = "SELECT * FROM m_company WHERE flag = 1"
     db.pool.query(queryString, (error, results) => {
         baseError.handleError(error, response)
 
@@ -25,7 +25,7 @@ exports.getCompanies = (request, response) => {
 exports.getCompanyById = (request, response) => {
     const id = request.body.id_company
 
-    const queryString = "SELECT * FROM m_company WHERE id = ? AND flag = 1"
+    let queryString = "SELECT * FROM m_company WHERE id = ? AND flag = 1"
     db.pool.query(queryString, [id], (error, results) => {
         baseError.handleError(error, response)
 
@@ -54,7 +54,7 @@ exports.editCompany = (request, response) => {
     const address = request.body.address
     const updater_id = request.user_id
 
-    const queryString = "UPDATE m_company SET name = ?, phone = ?, email = ?, no_id = ?, lat = ?, lng = ?, address = ?, updater_id = ?, updated_at = ? WHERE id = ? AND flag = 1"
+    let queryString = "UPDATE m_company SET name = ?, phone = ?, email = ?, no_id = ?, lat = ?, lng = ?, address = ?, updater_id = ?, updated_at = ? WHERE id = ? AND flag = 1"
     db.pool.query(queryString, [name, phone, email, no_id, lat, lng, address, updater_id, new Date(), id_company], (error, results) => {
         baseError.handleError(error, response)
 
@@ -69,7 +69,7 @@ exports.deleteCompany = (request, response) => {
     const id_company = request.body.id_company
     const updater_id = request.user_id
 
-    const queryString = "UPDATE m_company SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
+    let queryString = "UPDATE m_company SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
     db.pool.query(queryString, [updater_id, new Date(), id_company], (error, results) => {
         baseError.handleError(error, response)
 

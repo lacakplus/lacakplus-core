@@ -13,7 +13,7 @@ exports.addTracking = (request, response) => {
         values.push([user_id, data_tracking[i].id_travel, data_tracking[i].lat, data_tracking[i].lng, data_tracking[i].signal_strength])
     }
 
-    const queryString = "INSERT INTO tr_tracking (id_driver, id_travel, lat, lng, signal_strength) VALUES ?"
+    let queryString = "INSERT INTO tr_tracking (id_driver, id_travel, lat, lng, signal_strength) VALUES ?"
     db.pool.query(queryString, [values], (error, results) => {
         baseError.handleError(error, response)
 
@@ -32,7 +32,7 @@ exports.addTracking = (request, response) => {
 exports.getTrackings = (request, response) => {
     const id_travel = request.body.id_travel
 
-    const queryString = "SELECT * FROM tr_tracking WHERE id_travel = ?"
+    let queryString = "SELECT * FROM tr_tracking WHERE id_travel = ?"
     db.pool.query(queryString, [id_travel], (error, results) => {
         baseError.handleError(error, response)
         

@@ -1,7 +1,8 @@
-const fs = require("fs");
 const db = require('../config/dbConfig.js');
-const { use } = require('../routers/router.js');
+const statusCode = require('../config/statusCode.js');
+
 const File = db.File;
+
 exports.upload = async (req, res) => {
     try{
         console.log(req.file);
@@ -13,15 +14,15 @@ exports.upload = async (req, res) => {
             type: req.file.mimetype,
             name: req.file.filename
           }).then((image) => {
-            res.status(200).json({
-                code: 200,
+            response.status(statusCode.success).send({
+                code: statusCode.success,
                 message: "Successful upload " + req.file.mimetype,
                 data: req.file.filename
             });
         });
     }catch(error){
-        res.status(500).json({
-            code: 500,
+        response.status(statusCode.internal_server_error).send({
+            code: statusCode.internal_server_error,
             message: "Error : Can not upload a image",
             error: error.message
         });

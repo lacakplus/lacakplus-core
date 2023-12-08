@@ -1,25 +1,22 @@
 const db = require('../config/dbConfig.js');
+const statusCode = require('../config/statusCode.js');
+const baseError = require("../middleware/error.js");
 
 exports.getVehicleById = (request, response) => {
     const id = request.body.id_vehicle
-    db.pool.query('SELECT * FROM m_vehicle WHERE id = ? AND flag = 1', [id], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+
+    let queryString = "SELECT * FROM m_vehicle WHERE id = ? AND flag = 1"
+    db.pool.query(queryString, [id], (error, results) => {
+        baseError.handleError(error, response)
+
         if (results.length == 0) {
-            response.json({
-                code: 401,
+            return response.status(statusCode.empty_data).send({
+                code: statusCode.empty_data,
                 message: "Kendaraan tidak ditemukan"
             });
-            return
         }
-        response.json({
-            code: 200,
+        response.status(statusCode.success).send({
+            code: statusCode.success,
             message: "Kendaraan ditemukan",
             data: results[0]
         });
@@ -31,41 +28,26 @@ exports.getVehicles = (request, response) => {
     const search = request.body.search
     const limit = request.body.limit || 10
  
-    var page = 0
-    if (request.body.page > 0) {
-        page = (request.body.page - 1) * limit
-    }
+    let page = (request.body.page > 0) ? (request.body.page - 1) * limit : 0
 
-    var query = 'SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE flag = 1'
+    var queryString = "SELECT id, name, no_plate, type, kilometers FROM m_vehicle WHERE flag = 1"
 
-    query += (search != null? (" AND (name like '%"+ search +"%' OR no_plate like '%"+ search +"%' OR type like '%"+ search +"%')") : "")
-    query += (id_company != null? (" AND id_company="+id_company) : "")
-    query += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page)) 
+    queryString += (search != null? (" AND (name like '%"+ search +"%' OR no_plate like '%"+ search +"%' OR type like '%"+ search +"%')") : "")
+    queryString += (id_company != null? (" AND id_company="+id_company) : "")
+    queryString += ((request.body.limit == null && request.body.page == null)? "" : (" LIMIT "+limit+" OFFSET "+page)) 
 
-    db.pool.query(query, [id_company, limit, page], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+    db.pool.query(queryString, [id_company, limit, page], (error, results) => {
+        baseError.handleError(error, response)
+
         db.pool.query("SELECT COUNT(id) as total FROM m_vehicle WHERE id_company = ? AND flag = 1", [id_company],(error, resultTotal) => {
-            if (error) {
-                response.json({
-                    code: 400,
-                    message: error.message,
-                    error: error
-                });
-                return
-            }
+        baseError.handleError(error, response)
+
             let data = {
                 total_data: resultTotal[0].total,
                 vehicles: results
             }
-            response.json({
-                code: 200,
+            response.status(statusCode.success).send({
+                code: statusCode.success,
                 message: "Kendaraan ditemukan",
                 data: data
             });
@@ -83,33 +65,21 @@ exports.addVehicle = (request, response) => {
     const kilometers = request.body.kilometers
     const creator_id = request.user_id
 
-    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1 AND id_company = ?', [no_plate, id_company], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+    let queryString = "SELECT * FROM m_vehicle WHERE no_plate = ? AND flag = 1 AND id_company = ?"
+    db.pool.query(queryString, [no_plate, id_company], (error, results) => {
+        baseError.handleError(error, response)
+
         if (results.length != 0) {
-            response.json({
-                code: 401,
+            return response.status(statusCode.data_already_use).send({
+                code: statusCode.data_already_use,
                 message: "Plat nomor sudah pernah digunakan"
             });
-            return
         }
-        db.pool.query('INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id], (error, results) => {
-            if (error) {
-                response.json({
-                    code: 400,
-                    message: error.message,
-                    error: error
-                });
-                return
-            }
-            response.json({
-                code: 200,
+        db.pool.query("INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id], (error, results) => {
+            baseError.handleError(error, response)
+            
+            response.status(statusCode.success).send({
+                code: statusCode.success,
                 message: "Kendaraan berhasil ditambahkan"
             });
         })
@@ -128,21 +98,15 @@ exports.editVehicle = (request, response) => {
     const updater_id = request.user_id
     const date = new Date()
 
-    db.pool.query('SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1 AND id <> ?', [no_plate, id_company, id_vehicle], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+    let queryString = "SELECT * FROM m_vehicle WHERE no_plate = ? AND id_company = ? AND flag = 1 AND id <> ?"
+    db.pool.query(queryString, [no_plate, id_company, id_vehicle], (error, results) => {
+        baseError.handleError(error, response)
+
         if (results.length != 0) {
-            response.json({
-                code: 401,
+            return response.status(statusCode.data_already_use).send({
+                code: statusCode.data_already_use,
                 message: "Plat nomor sudah pernah digunakan"
             });
-            return
         }
 
         var query = "UPDATE m_vehicle SET updated_at = '"+date+"', updater_id = "+updater_id
@@ -158,16 +122,10 @@ exports.editVehicle = (request, response) => {
         query += " WHERE id = "+id_vehicle
 
         db.pool.query(query, (error, results) => {
-            if (error) {
-                response.json({
-                    code: 400,
-                    message: error.message,
-                    error: error
-                });
-                return
-            }
-            response.json({
-                code: 200,
+            baseError.handleError(error, response)
+            
+            response.status(statusCode.success).send({
+                code: statusCode.success,
                 message: "Berhasil edit Kendaraan"
             });
         })
@@ -178,17 +136,12 @@ exports.deleteVehicle = (request, response) => {
     const id_vehicle = request.body.id_vehicle
     const updater_id = request.user_id
     
-    db.pool.query('UPDATE m_vehicle SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?', [updater_id, new Date(), id_vehicle], (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
-        response.json({
-            code: 200,
+    let queryString = "UPDATE m_vehicle SET updater_id = ?, updated_at = ?, flag = 0 WHERE id = ?"
+    db.pool.query(queryString, [updater_id, new Date(), id_vehicle], (error, results) => {
+        baseError.handleError(error, response)
+
+        response.status(statusCode.success).send({
+            code: statusCode.success,
             message: "Berhasil hapus Kendaraan"
         });
     })

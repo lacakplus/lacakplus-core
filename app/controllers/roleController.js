@@ -3,7 +3,7 @@ const statusCode = require('../config/statusCode.js');
 const baseError = require("../middleware/error.js");
 
 exports.getRoles = (request, response) => {
-    const queryString = "SELECT * FROM m_role"
+    let queryString = "SELECT * FROM m_role"
     db.pool.query(queryString, (error, results) => {
         baseError.handleError(error, response)
         
