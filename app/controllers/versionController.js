@@ -1,16 +1,12 @@
 const db = require('../config/dbConfig.js');
+const statusCode = require('../config/statusCode.js');
+const baseError = require("../middleware/error.js");
 
 exports.getVersion = (request, response) => {
     const reqVersionSplit = request.body.version.split(".");
     db.pool.query("SELECT * FROM m_version", (error, results) => {
-        if (error) {
-            response.json({
-                code: 400,
-                message: error.message,
-                error: error
-            });
-            return
-        }
+        baseError.handleError(error, response)
+        
         var updateApps = false
         var message = "Aplikasi sudah version terbaru"
 
