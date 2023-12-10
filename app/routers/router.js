@@ -22,8 +22,8 @@ router.post('/api/register', user.register);
 
 //  attendanceController
 const attendance = require('../controllers/attendanceController.js');
+router.get('/api/attendance/today', auth.verifyToken, attendance.getAttendanceToday);
 router.post('/api/attendance/add', auth.verifyToken, attendance.addAtendance);
-router.post('/api/attendance/today', auth.verifyToken, attendance.getAttendanceToday);
 
 // const version = require('../controllers/versionController.js');
 // router.post('/api/version/apps', version.getVersion);
