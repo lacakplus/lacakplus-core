@@ -32,8 +32,8 @@ exports.getAttendanceToday = (request, response) => {
     
     let dateNow = year + "-" + month + "-" + date
     
-    let queryString = "SELECT * FROM tr_attendance WHERE id = ? AND flag = 1 AND attendance_at = ?"
-    db.pool.query(queryString, [user_id, dateNow], (error, results) => {
+    let queryString = "SELECT * FROM tr_attendance WHERE id = ? AND flag = 1"
+    db.pool.query(queryString, [user_id], (error, results) => {
         baseError.handleError(error, response)
 
         response.status(statusCode.success).send({
