@@ -30,10 +30,10 @@ exports.getAttendanceToday = (request, response) => {
     let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
     let year = date_ob.getFullYear();
     
-    let dateNow = year + "-" + month + "-" + date
+    let dateNow = year + "-" + month + "-" + date +" 00:00:00"
     
-    let queryString = "SELECT * FROM tr_attendance WHERE creator_id = ? AND flag = 1"
-    db.pool.query(queryString, [user_id], (error, results) => {
+    let queryString = "SELECT * FROM tr_attendance WHERE creator_id = ? AND flag = 1 AND attendance_at >= ?"
+    db.pool.query(queryString, [user_id, dateNow], (error, results) => {
         baseError.handleError(error, response)
 
         response.status(statusCode.success).send({
