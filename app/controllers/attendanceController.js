@@ -38,7 +38,7 @@ exports.getAttendanceToday = (request, response) => {
 
         response.status(statusCode.success).send({
             code: statusCode.success,
-            message: message,
+            message: "Berhasil ambil data absensi hari ini",
             data: results
         });
     })
