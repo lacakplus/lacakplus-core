@@ -3,7 +3,7 @@ const statusCode = require('../config/statusCode.js');
 
 const File = db.File;
 
-exports.upload = async (req, res) => {
+exports.upload = async (req, response) => {
     try{
         console.log(req.file);
 
