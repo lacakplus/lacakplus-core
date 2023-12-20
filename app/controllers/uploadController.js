@@ -8,18 +8,20 @@ exports.upload = async (req, response) => {
         console.log(req.file);
 
         if (req.file == undefined) {
-            return res.send("File is empty");
-        }
-        File.create({
-            type: req.file.mimetype,
-            name: req.file.filename
-          }).then((image) => {
+            return response.send("File is empty");
+        } else {
             response.status(statusCode.success).send({
                 code: statusCode.success,
                 message: "Successful upload " + req.file.mimetype,
                 data: req.file.filename
             });
-        });
+        }
+        // File.create({
+        //     type: req.file.mimetype,
+        //     name: req.file.filename
+        //   }).then((image) => {
+            
+        // });
     }catch(error){
         response.status(statusCode.internal_server_error).send({
             code: statusCode.internal_server_error,
