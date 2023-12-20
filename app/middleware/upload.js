@@ -1,7 +1,5 @@
 const e = require("express");
 const multer = require("multer");
-let fs = require('fs-extra');
-// const path = require("path");
 
 const imageFilter = (req, file, cb) => {
   cb(null, true);
@@ -10,9 +8,7 @@ const imageFilter = (req, file, cb) => {
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
-      let path = 'resource/image';
-      fs.mkdirsSync(path);
-      cb(null, path);
+      cb(null, "./resource/image");
     } else if (file.mimetype.startsWith("video")) {
       cb(null, "./resource/video");
     } else {
