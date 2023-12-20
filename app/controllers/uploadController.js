@@ -8,7 +8,10 @@ exports.upload = async (req, response) => {
         console.log(req.file);
 
         if (req.file == undefined) {
-            return response.send("File is empty");
+            return response.status(statusCode.empty_data).send({
+                code: statusCode.empty_data,
+                message: "File tidak ditemukan"
+            });
         } else {
             response.status(statusCode.success).send({
                 code: statusCode.success,
