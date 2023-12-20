@@ -9,7 +9,7 @@ const imageFilter = (req, file, cb) => {
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
-      cb(null, path.resolve(__dirname, '..${path.sep}..${path.sep}', '${path.sep}resource${path.sep}image'));
+      cb(null, path.join(__dirname, './resource/image'));
     } else if (file.mimetype.startsWith("video")) {
       cb(null, "./resource/video");
     } else {
