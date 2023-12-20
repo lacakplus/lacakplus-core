@@ -7,16 +7,16 @@ exports.upload = async (req, response) => {
     try{
         console.log(req.file);
 
-        if (req.file == undefined) {
-            return response.status(statusCode.empty_data).send({
-                code: statusCode.empty_data,
-                message: "File tidak ditemukan"
-            });
-        } else {
-            response.status(statusCode.success).send({
+        if (req.file) {
+            return response.status(statusCode.success).send({
                 code: statusCode.success,
                 message: "Successful upload " + req.file.mimetype,
                 data: req.file.filename
+            });
+        } else {
+            return response.status(statusCode.empty_data).send({
+                code: statusCode.empty_data,
+                message: "File tidak ditemukan"
             });
         }
         // File.create({
