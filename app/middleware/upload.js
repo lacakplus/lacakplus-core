@@ -2,8 +2,6 @@ const e = require("express");
 const multer = require("multer");
 const path = require("path");
 
-global.appRoot = __dirname;
-
 const imageFilter = (req, file, cb) => {
   cb(null, true);
 };
@@ -11,8 +9,7 @@ const imageFilter = (req, file, cb) => {
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
-      cb(null, "./resource/image");
-      // cb(null, path.join(__dirname, './resource/image'));
+      cb(null, path.join(__dirname, './resource/image'));
     } else if (file.mimetype.startsWith("video")) {
       cb(null, "./resource/video");
     } else {
