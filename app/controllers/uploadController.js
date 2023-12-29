@@ -26,7 +26,7 @@ exports.upload = async (req, response) => {
             
         // });
     }catch(error){
-        response.status(statusCode.internal_server_error).send({
+        response.send({
             code: statusCode.internal_server_error,
             message: "Error : Can not upload a image",
             error: error.message
