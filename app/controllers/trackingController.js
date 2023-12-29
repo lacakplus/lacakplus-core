@@ -22,7 +22,7 @@ exports.addTracking = (request, response) => {
                 
         //     })
         // }
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data tracking berhasil di tambahkan"
         });
@@ -36,7 +36,7 @@ exports.getTrackings = (request, response) => {
     db.pool.query(queryString, [id_travel], (error, results) => {
         baseError.handleError(error, response)
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data tracking ditemukan",
             data: results
@@ -59,7 +59,7 @@ exports.getPositionVehicles = (request, response) => {
     db.pool.query(query, [id_company], (error, results) => {
         baseError.handleError(error, response)
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data posisi kendaraan ditemukan",
             data: results

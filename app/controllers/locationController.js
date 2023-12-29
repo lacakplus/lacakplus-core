@@ -17,7 +17,7 @@ exports.addLocation = (request, response) => {
     db.pool.query(queryString, [id_company, name, email, phone, lat, lng, address, type, user_id], (error, results) => {
         baseError.handleError(error, response)
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil Menambahkan Lokasi"
         });
@@ -49,7 +49,7 @@ exports.getLocations = (request, response) => {
                 total_data: resultTotal[0].total,
                 locations: results
             }
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Lokasi ditemukan",
                 data: data
@@ -66,13 +66,13 @@ exports.getLocationById = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Lokasi tidak ditemukan"
             });
         }
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Lokasi ditemukan",
             data: results[0]
@@ -105,7 +105,7 @@ exports.editLocation = (request, response) => {
     db.pool.query(query, (error, results) => {
         baseError.handleError(error, response)
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil Edit Lokasi"
         });
@@ -120,7 +120,7 @@ exports.deleteLocation = (request, response) => {
     db.pool.query(queryString, [updater_id, new Date(), id], (error, results) => {
         baseError.handleError(error, response)
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil Hapus Lokasi"
         });

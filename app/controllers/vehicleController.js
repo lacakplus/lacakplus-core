@@ -10,12 +10,12 @@ exports.getVehicleById = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Kendaraan tidak ditemukan"
             });
         }
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Kendaraan ditemukan",
             data: results[0]
@@ -46,7 +46,7 @@ exports.getVehicles = (request, response) => {
                 total_data: resultTotal[0].total,
                 vehicles: results
             }
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Kendaraan ditemukan",
                 data: data
@@ -70,7 +70,7 @@ exports.addVehicle = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length != 0) {
-            return response.status(statusCode.data_already_use).send({
+            return response.send({
                 code: statusCode.data_already_use,
                 message: "Plat nomor sudah pernah digunakan"
             });
@@ -78,7 +78,7 @@ exports.addVehicle = (request, response) => {
         db.pool.query("INSERT INTO m_vehicle (id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [id_company, no_plate, name, brand, type, bought_year, kilometers, creator_id], (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Kendaraan berhasil ditambahkan"
             });
@@ -103,7 +103,7 @@ exports.editVehicle = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length != 0) {
-            return response.status(statusCode.data_already_use).send({
+            return response.send({
                 code: statusCode.data_already_use,
                 message: "Plat nomor sudah pernah digunakan"
             });
@@ -124,7 +124,7 @@ exports.editVehicle = (request, response) => {
         db.pool.query(query, (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Berhasil edit Kendaraan"
             });
@@ -140,7 +140,7 @@ exports.deleteVehicle = (request, response) => {
     db.pool.query(queryString, [updater_id, new Date(), id_vehicle], (error, results) => {
         baseError.handleError(error, response)
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil hapus Kendaraan"
         });

@@ -7,7 +7,7 @@ exports.getRoles = (request, response) => {
     db.pool.query(queryString, (error, results) => {
         baseError.handleError(error, response)
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Role ditemukan",
             data: results

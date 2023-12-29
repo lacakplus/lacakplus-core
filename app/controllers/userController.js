@@ -17,7 +17,7 @@ exports.login = (request, response) => {
         baseError.handleError(error, response)
         
         if (results.length == 0 || results[0].flag == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Akun tidak ditemukan"
             });
@@ -38,14 +38,14 @@ exports.login = (request, response) => {
             db.pool.query("UPDATE m_user SET token = ?, platform = ?, version = ?, fcm = ? WHERE id = ?", [token, platform, version, fcm, results[0].id], (error, results) => {
                 baseError.handleError(error, response)
                 
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Berhasil Login",
                     data: dataUser
                 });
             })
         } else {
-            response.status(statusCode.wrong_password).send({
+            response.send({
                 code: statusCode.wrong_password,
                 message: "Kata sandi salah"
             });
@@ -77,7 +77,7 @@ exports.register = (request, response) => {
         baseError.handleError(error, response)
         
         if (results.length != 0) {
-            return response.status(statusCode.data_already_use).send({
+            return response.send({
                 code: statusCode.data_already_use,
                 message: "Email atau nama pengguna sudah pernah digunakan"
             });
@@ -94,7 +94,7 @@ exports.register = (request, response) => {
                     id_company: id_company,
                     id_user: results.insertId
                 }
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Selamat Anda Berhasil Daftar Akun!",
                     data: data
@@ -115,12 +115,12 @@ exports.getUserById = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Data pengguna tidak ditemukan"
             });
         }
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data pengguna ditemukan",
             data: results[0]
@@ -155,7 +155,7 @@ exports.getUsers = (request, response) => {
                 total_data: resultTotal[0].total,
                 users: results
             }
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Data pengguna ditemukan",
                 data: data
@@ -181,7 +181,7 @@ exports.addUser = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length != 0) {
-            return response.status(statusCode.data_already_use).send({
+            return response.send({
                 code: statusCode.data_already_use,
                 message: "Nama pengguna sudah pernah digunakan"
             });
@@ -190,7 +190,7 @@ exports.addUser = (request, response) => {
         db.pool.query("INSERT INTO m_user (id_company, id_role, name, no_id, email, username, password, phone, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [id_company, id_role, name, no_id, email, username, password, phone, user_id], (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Berhasil mendaftaran akun"
             });
@@ -217,7 +217,7 @@ exports.editUser = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length != 0) {
-            return response.status(statusCode.data_already_use).send({
+            return response.send({
                 code: statusCode.data_already_use,
                 message: "Nama pengguna sudah pernah digunakan"
             });
@@ -238,7 +238,7 @@ exports.editUser = (request, response) => {
         db.pool.query(query, (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Berhasil edit data pengguna"
             });
@@ -256,7 +256,7 @@ exports.deleteUser = (request, response) => {
     db.pool.query(queryString, [user_id, date, id_user], (error, results) => {
         baseError.handleError(error, response)
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil menghapus data pengguna"
         });

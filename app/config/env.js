@@ -1,9 +1,8 @@
-
 const env = {
-  database: 'dhuw4320_lacakplus_dev',
-  username: 'dhuw4320_lacakplus',
-  password: 's6YbqfP9lV',
-  host: 'localhost',
+  database: 'bbr06y6fjhbgszqqjxtn',
+  username: 'uylkpxqmwg3zrmbo',
+  password: 'Porjaw-giwpun-9bidqi',
+  host: 'bbr06y6fjhbgszqqjxtn-mysql.services.clever-cloud.com',
 };
 
 module.exports = env;

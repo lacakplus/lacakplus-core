@@ -8,13 +8,13 @@ exports.getCompanies = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Perusahaan tidak ditemukan"
             });
         }
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Perusahaan ditemukan",
             data: results
@@ -30,13 +30,14 @@ exports.getCompanyById = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Perusahaan tidak ditemukan"
             });
         }
-        response.json({
-            code: 200,
+
+        response.send({
+            code: statusCode.success,
             message: "Perusahaan ditemukan",
             data: results
         });
@@ -58,8 +59,8 @@ exports.editCompany = (request, response) => {
     db.pool.query(queryString, [name, phone, email, no_id, lat, lng, address, updater_id, new Date(), id_company], (error, results) => {
         baseError.handleError(error, response)
 
-        response.json({
-            code: 200,
+        response.send({
+            code: statusCode.success,
             message: "Berhasil Edit Perusahaan"
         });
     })
@@ -73,8 +74,8 @@ exports.deleteCompany = (request, response) => {
     db.pool.query(queryString, [updater_id, new Date(), id_company], (error, results) => {
         baseError.handleError(error, response)
 
-        response.json({
-            code: 200,
+        response.send({
+            code: statusCode.success,
             message: "Berhasil Hapus Perusahaan"
         });
     })

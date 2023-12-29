@@ -34,7 +34,7 @@ exports.addTravel = (request, response) => {
             db.pool.query("INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id) VALUES ?", [values], (error, results) => {
                 baseError.handleError(error, response)
 
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Berhasil buat Perjalanan",
                     data: results
@@ -70,7 +70,7 @@ exports.editTravel = (request, response) => {
             db.pool.query("INSERT INTO tr_travel_dtl (id_travel, sequence, id_location, creator_id, updater_id) VALUES ?", [values], (error, results) => {
                 baseError.handleError(error, response)
                 
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Berhasil edit Perjalanan",
                     data: results
@@ -106,7 +106,7 @@ exports.getTravels = (request, response) => {
     db.pool.query(queryString, (error, results) => {
         baseError.handleError(error, response)
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data perjalanan ditemukan",
             data: results
@@ -126,13 +126,13 @@ exports.getTravelById = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Perjalanan tidak ditemukan"
             });
         }
         
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Perjalanan ditemukan",
             data: results[0]
@@ -150,13 +150,13 @@ exports.getTravelDetails = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({
+            return response.send({
                 code: statusCode.empty_data,
                 message: "Data perjalanan detail tidak ditemukan"
             });
         }
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data perjalanan detail ditemukan",
             data: results
@@ -200,7 +200,7 @@ exports.editTravelDetails = (request, response) => {
         db.pool.query(query, (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Berhasil edit Perjalanan",
                 data: results
@@ -221,7 +221,7 @@ exports.activeTravel = (request, response) => {
         db.pool.query("UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?", [user_id, date, id_travel_dtl], (error, results) => {
             baseError.handleError(error, response)
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Berhasil aktifkan status perjalanan"
             });
@@ -247,7 +247,7 @@ exports.travelStart = (request, response) => {
             db.pool.query("UPDATE tr_travel_dtl SET status = 1, updater_id = ?, updated_at = ? WHERE id = ?", [user_id, date, id_travel_dtl_next], (error, results) => {
                 baseError.handleError(error, response)
             
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Berhasil mulai perjalanan"
                 });
@@ -275,13 +275,13 @@ exports.travelArriveCustomer = (request, response) => {
             baseError.handleError(error, response)
 
             if (results.length == 0) {
-                return response.status(statusCode.empty_data).send({
+                return response.send({
                     code: statusCode.empty_data,
                     message: "Data perjalanan detail tidak ditemukan"
                 });
             }
             
-            response.status(statusCode.success).send({
+            response.send({
                 code: statusCode.success,
                 message: "Data perjalanan detail ditemukan",
                 data: results
@@ -313,13 +313,13 @@ exports.travelDepartCustomer = (request, response) => {
                 baseError.handleError(error, response)
                 
                 if (results.length == 0) {
-                    return response.status(statusCode.empty_data).send({
+                    return response.send({
                         code: statusCode.empty_data,
                         message: "Data perjalanan detail tidak ditemukan"
                     });
                 }
                 
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Data perjalanan detail ditemukan",
                     data: results
@@ -351,13 +351,13 @@ exports.travelComplete = (request, response) => {
                 baseError.handleError(error, response)
 
                 if (results.length == 0) {
-                    return response.status(statusCode.empty_data).send({
+                    return response.send({
                         code: statusCode.empty_data,
                         message: "Data perjalanan detail tidak ditemukan"
                     });
                 }
                 
-                response.status(statusCode.success).send({
+                response.send({
                     code: statusCode.success,
                     message: "Data perjalanan detail ditemukan",
                     data: results
@@ -387,13 +387,13 @@ exports.getTravelTotal = (request, response) => {
         baseError.handleError(error, response)
 
         if (results.length == 0) {
-            return response.status(statusCode.empty_data).send({         
+            return response.send({         
                 code: statusCode.empty_data,
                 message: "Data perjalanan tidak ditemukan"
             });
         }
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Data perjalanan ditemukan",
             data: results[0]

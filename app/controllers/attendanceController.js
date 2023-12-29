@@ -15,7 +15,7 @@ exports.addAtendance = (request, response) => {
         baseError.handleError(error, response)
 
         let message = (status == 0) ? "Berhasil Clock In" : "Berhasil Clock Out"
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: message
         });
@@ -36,7 +36,7 @@ exports.getAttendanceToday = (request, response) => {
     db.pool.query(queryString, [user_id, dateNow], (error, results) => {
         baseError.handleError(error, response)
 
-        response.status(statusCode.success).send({
+        response.send({
             code: statusCode.success,
             message: "Berhasil ambil data absensi hari ini",
             data: results
