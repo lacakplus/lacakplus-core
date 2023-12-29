@@ -1,7 +1,7 @@
 const env = require('./env.js');
 const mySql = require('mysql');
 
-const pool = mySql.createPool({
+const pool = mySql.createConnection({
   user: env.username,
   host: env.host,
   password: env.password,
