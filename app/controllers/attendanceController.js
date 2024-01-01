@@ -33,7 +33,7 @@ exports.getAttendanceToday = (request, response) => {
     
     let dateNow = year + "-" + month + "-" + date +" 00:00:00"
     
-    let queryString = "SELECT id, attendance_at, status, photo, location FROM tr_attendance WHERE creator_id = ? AND flag = 1 AND attendance_at >= ?"
+    let queryString = "SELECT id, attendance_at, status, photo, location, note FROM tr_attendance WHERE creator_id = ? AND flag = 1 AND attendance_at >= ?"
     db.pool.query(queryString, [user_id, dateNow], (error, results) => {
         baseError.handleError(error, response)
 
