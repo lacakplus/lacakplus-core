@@ -9,9 +9,10 @@ exports.addAtendance = (request, response) => {
     const status = request.body.status
     const photo = request.body.photo
     const location = request.body.location
+    const note = request.body.note
 
-    let queryString = "INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, creator_id) VALUES (?, ?, ?, ?, ?, ?)"
-    db.pool.query(queryString, [id_company, attendance_at, status, photo, location, user_id], (error, results) => {
+    let queryString = "INSERT INTO tr_attendance (id_company, attendance_at, status, photo, location, note, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    db.pool.query(queryString, [id_company, attendance_at, status, photo, location, note, user_id], (error, results) => {
         baseError.handleError(error, response)
 
         let message = (status == 0) ? "Berhasil Clock In" : "Berhasil Clock Out"
