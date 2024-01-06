@@ -3,10 +3,13 @@ const auth = require("../middleware/auth.js");
 const upload = require("../middleware/upload.js");
 const router = express.Router();
 
+const version = require('../controllers/versionController.js');
+router.post('/api/version/apps', version.getVersion);
+
 //  uploadController
 const uploadController = require("../controllers/uploadController.js");
-router.post("/api/upload", auth.verifyToken, upload.single("file"), uploadController.upload);
-
+router.post("/api/upload", auth.verifyToken, upload.single("file"), uploadController.uploadSingle);
+// router.post("/api/upload", auth.verifyToken, upload.array("files", 5), uploadController.uploadMultiple);
  
 //  userController
 const user = require('../controllers/userController.js');
@@ -19,14 +22,11 @@ router.post('/api/user/delete', auth.verifyToken, user.deleteUser);
 router.post('/api/login', user.login);
 router.post('/api/register', user.register);
 
-
 //  attendanceController
 const attendance = require('../controllers/attendanceController.js');
-router.get('/api/attendance/today', auth.verifyToken, attendance.getAttendanceToday);
+router.post('/api/attendance/date', auth.verifyToken, attendance.getAttendanceByDate);
 router.post('/api/attendance/add', auth.verifyToken, attendance.addAtendance);
-
-// const version = require('../controllers/versionController.js');
-// router.post('/api/version/apps', version.getVersion);
+router.post('/api/attendance/add-request', auth.verifyToken, attendance.addAtendanceRequest);
 
 //  roleController
 const role = require("../controllers/roleController.js");
