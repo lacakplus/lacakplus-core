@@ -34,9 +34,10 @@ exports.getAttendanceByDate = (request, response) => {
     
     // let dateNow = year + "-" + month + "-" + date +" 00:00:00"
     let dateNow = date +" 00:00:00"
+    let dateNowMax = date +" 23:59:59"
     
-    let queryString = "SELECT id, attendance_at, status, photo, location, note FROM tr_attendance WHERE creator_id = ? AND flag = 1 AND attendance_at >= ?"
-    db.pool.query(queryString, [user_id, dateNow], (error, results) => {
+    let queryString = "SELECT id, attendance_at, status, photo, location, note FROM tr_attendance WHERE creator_id = ? AND flag = 1 AND attendance_at >= ? AND attendance_at <= ?"
+    db.pool.query(queryString, [user_id, dateNow, dateNowMax], (error, results) => {
         baseError.handleError(error, response)
 
         response.send({
